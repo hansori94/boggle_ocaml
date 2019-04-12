@@ -1,4 +1,4 @@
-(* 
+
 type words = string list
 
 type input = 
@@ -29,4 +29,4 @@ let parse str =
   end
   else
     raise (Malformed)
- *)
+
