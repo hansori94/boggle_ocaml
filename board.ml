@@ -1,6 +1,6 @@
 
 
-type board = (char list) list
+type board = (char array) array
 
 let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
                 'p';'q';'r';'s';'t';'u';'v';'w';'x';'y';'z']
@@ -22,6 +22,28 @@ let die14 = ['a';'f';'f';'k';'p';'s']
 let die15 = ['h';'l';'n';'n';'r';'z']
 let die16 = ['d';'e';'i';'l';'r';'x']
 
+let dicearray = Array.make_matrix 4 4 []
+
+let dice = 
+  dicearray.(0).(0) <- die1;
+  dicearray.(0).(1) <- die2;
+  dicearray.(0).(2) <- die3;
+  dicearray.(0).(3) <- die4;
+  dicearray.(1).(0) <- die5;
+  dicearray.(1).(1) <- die6;
+  dicearray.(1).(2) <- die7;
+  dicearray.(1).(3) <- die8;
+  dicearray.(2).(0) <- die9;
+  dicearray.(2).(1) <- die10;
+  dicearray.(2).(2) <- die11;
+  dicearray.(2).(3) <- die12;
+  dicearray.(3).(0) <- die13;
+  dicearray.(3).(1) <- die14;
+  dicearray.(3).(2) <- die15;
+  dicearray.(3).(3) <- die16;
+  dicearray
+
+
 
 (** TODO DOCUMENT BETTER
     get a random char from an array of chars
@@ -36,8 +58,19 @@ let random_letter str : char =
     | [] -> failwith "random letter chooser error" in 
   get_char str
 
-let make_board m n : board= 
-  failwith "Unimplemented"
+let make_board m n : board = 
+  let arr = Array.make_matrix m n ' ' in
+  let edit_arr arr = 
+    for x=0 to m-1 do 
+      for y=0 to n-1 do
+        arr.(x).(y) <- random_letter dice.(x).(y)
+      done
+    done in 
+
+  edit_arr arr;
+
+  arr
+
 
 let get_all_words board = 
   failwith "Unimplemented"

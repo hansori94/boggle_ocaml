@@ -4,7 +4,7 @@
 
 
 (** TODO DOCUMENT *)
-type board = (char list) list
+type board = (char array) array
 
 (** TODO DOCUMENT BETTER
     Makes a random boggle board
