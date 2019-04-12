@@ -1,13 +1,10 @@
 
 
 
-
-
-
-
-
 let main () = 
-  ANSITerminal.(print_endline [white]
-                  "Boggle!")
+  ANSITerminal.(print_string [white] "\nBoggle!");
+  print_endline "hi"
+
+
 
 let () = main ()
