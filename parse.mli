@@ -6,7 +6,7 @@
     player input.  Each word of represents a word of the [words] input
     , where a {i word} is defined as a consecutive sequence of non-space 
     characters. *)
-type words = string
+type words = string list
 
 (** Represents a player input. Decomposes the input to a verb and 
     a [words].  *)
