@@ -18,3 +18,6 @@ val make_board : int -> int -> board
     findable means can be made from the given board following the rules of boggle
 *)
 val get_all_words : board -> string list
+
+(** TODO *)
+val print_board : board -> unit
