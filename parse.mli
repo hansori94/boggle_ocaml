@@ -35,10 +35,10 @@ exception Malformed
     Raises: [Empty] if [str] is the empty string or contains only spaces. 
 
     Raises: [Malformed] if the input is malformed. An input
-    is {i malformed} if the verb is neither "quit" nor "word" nor "start",
+    is {i malformed} if the verb is neither "quit" nor "start",
     or if the verb is "quit" and there is an input besides "game",
     or if the verb is "start" and there is an input besides "game",
-    or if the verb is "word" and there is an empty object phrase,
-    or if the verb is "word" and there is an object phrase of more than one word
+    or if there is an object phrase of more than one word with the verb not being
+    "quit" or "start"
 *)
 val parse : string -> input

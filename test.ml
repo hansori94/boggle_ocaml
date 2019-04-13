@@ -1,5 +1,6 @@
 open OUnit2
 open State
+open Parse
 
 (** TODO DOCUMENT
     Acknowledgments: this method was taken from a previous assignment
@@ -30,13 +31,34 @@ let state_tests = [
 
 ]
 
+let bar1 = fun () -> parse " "
+let bar2 = fun () -> parse " hello there"
+let bar3 = fun () -> parse "quit game now"
+let bar4 = fun () -> parse "start   game now "
 
+let word1 = Word["hello"]
+
+let quit = Quit
+let start = Start
+
+let parse_tests = [
+  "parse empty" >:: (fun _ -> assert_raises Empty bar1);
+  "parse malformed too many words" >:: (fun _ -> assert_raises Malformed bar2);
+  "parse malformed quit with word other than game" >:: (fun _ -> assert_raises Malformed bar3);
+  "parse malformed start with word other than game" >:: (fun _ -> assert_raises Malformed bar4);
+  "parse word is hello" >:: (fun _ -> assert_equal word1 (parse "hello"));
+  "parse word is hello spaces" >:: (fun _ -> assert_equal word1 (parse "    hello "));
+  "parse quit game" >:: (fun _ -> assert_equal quit (parse "quit game"));
+  "parse quit game with spaces" >:: (fun _ -> assert_equal quit (parse "  quit     game  "));
+  "parse start game" >:: (fun _ -> assert_equal start (parse "start game"));
+  "parse start game with spaces" >:: (fun _ -> assert_equal start (parse "  start     game  "));
+]
 
 
 let tests =
   "test suite for midterm"  >::: List.flatten [
     state_tests;
-
+    parse_tests;
   ]
 
 let _ = run_test_tt_main tests
