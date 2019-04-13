@@ -1,4 +1,3 @@
-open ANSITerminal
 
 type board = (char array) array
 

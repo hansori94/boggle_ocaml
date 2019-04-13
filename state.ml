@@ -1,8 +1,5 @@
+open Board
 
-
-
-(** I DON'T THINK WE SHOULD NEED THIS HERE MAYBE REMOVE LATER *)
-type board = (char list) list
 
 type player = {
   found_words: string list;
@@ -16,4 +13,5 @@ let get_points player =
   player.points
 
 let check_valid_word str board = 
-  failwith "Unimplemented"
+  let str_list = Board.get_all_words board in 
+  List.mem str str_list

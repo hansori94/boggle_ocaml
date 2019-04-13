@@ -4,6 +4,7 @@ type words = string list
 type input = 
   | Quit
   | Word of words
+  | Start
 
 exception Empty
 
@@ -25,6 +26,7 @@ let parse str =
   if (List.length strings = 2) then begin
     match strings with
     | h::t::[] when h = "quit" && t = "game" -> Quit
+    | h::t::[] when h = "start" && t = "game" -> Start
     | _ -> raise (Malformed)
   end
   else
