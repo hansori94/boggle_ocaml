@@ -44,8 +44,8 @@ let dice =
 
 
 
-(** TODO DOCUMENT BETTER
-    get a random char from an array of chars
+(** [random_letter list] takes in a char list and returns a randomly selected
+    char from that char list
 *)
 let random_letter str : char = 
   Random.self_init ();
@@ -70,7 +70,8 @@ let make_board m n : board =
 
   arr
 
-(** TODO DOCUMENT *)
+(** [print_board board] prints to the screen the [board] in the style of boggle,
+    consisting of 4 rows and 4 columns with spaces between each char *)
 let print_board (board:board) : unit=
   let board_format = 
     Char.escaped board.(0).(0) ^ "  " ^ Char.escaped board.(0).(1) ^ "  " ^ Char.escaped board.(0).(2) ^ "  " ^ Char.escaped board.(0).(3) ^ "\n" ^

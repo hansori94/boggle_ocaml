@@ -13,6 +13,7 @@ type words = string list
 type input = 
   | Quit
   | Word of words
+  | Start
 
 (** Raised if empty input is encountered. *)
 exception Empty
@@ -24,8 +25,9 @@ exception Malformed
     word (i.e., consecutive sequence of non-space characters) of [str] becomes 
     the verb. The next word if any, become the object phrase.
     Examples: 
-    - [parse "    quit game   "] is [Quit "game"]
+    - [parse "    quit game   "] is [Quit]
     - [parse "Word word"] is [Word "word"]. 
+    - [parse "start game"] is [Start]
 
     Requires: [str] contains only alphanumeric (A-Z, a-z, 0-9) and space 
     characters (only ASCII character code 32; not tabs or newlines, etc.).
@@ -33,7 +35,10 @@ exception Malformed
     Raises: [Empty] if [str] is the empty string or contains only spaces. 
 
     Raises: [Malformed] if the input is malformed. An input
-    is {i malformed} if the verb is neither "quit" nor "word",
+    is {i malformed} if the verb is neither "quit" nor "word" nor "start",
     or if the verb is "quit" and there is an input besides "game",
-    or if the verb is "word" and there is an empty object phrase.*)
+    or if the verb is "start" and there is an input besides "game",
+    or if the verb is "word" and there is an empty object phrase,
+    or if the verb is "word" and there is an object phrase of more than one word
+*)
 val parse : string -> input

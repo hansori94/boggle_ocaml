@@ -10,7 +10,7 @@ exception Empty
 
 exception Malformed
 
-(** TODO DOCUMENT *)
+(** [parse_helper strlst] returns [strlst] but with the empty strings removed *)
 let rec parse_helper = function
   | [] -> []
   | h::t -> 

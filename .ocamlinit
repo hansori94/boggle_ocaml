@@ -2,3 +2,4 @@
 #require "ANSITerminal";;
 #directory "_build";;
 #use "board.ml"
+#use "state.ml"
