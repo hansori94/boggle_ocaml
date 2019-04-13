@@ -3,11 +3,10 @@ open Parse
 open State
 
 
-
-
 let rec start_game input = 
   match Parse.parse input with
-  | Start -> print_endline "start the game!"
+  | Start -> 
+    Board.print_board (make_board 4 4)
   | exception Empty -> 
     print_endline "\nYou didn't type anything. Type 'start game' to start playing!"; 
     print_string "> ";
@@ -25,14 +24,6 @@ let main () =
   ANSITerminal.(print_string [magenta] "\ninstructions instructions\n");
   print_string "> ";
   start_game (read_line())
-
-
-
-(* let input = read_line () in
-   match Parse.parse input with
-   | Start -> print_endline "hehe"
-   | _ -> print_endline "hey" *)
-
 
 
 let () = main ()
