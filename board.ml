@@ -80,15 +80,16 @@ let print_board (board:board) : unit=
     Char.escaped board.(3).(0) ^ "  " ^ Char.escaped board.(3).(1) ^ "  " ^ Char.escaped board.(3).(2) ^ "  " ^ Char.escaped board.(3).(3) ^ "\n" in 
 
   begin
-    ANSITerminal.(print_string [cyan] board_format);
+    ANSITerminal.(print_string [cyan; Bold] board_format);
   end
 
 let isWord (word:string) : bool = 
   true
-
+(* 
 let rec get_all_words (board: board) (visited: (bool array) array) (i:int)
-    (j:int) (str:string) (acc: string list) : string list = 
-  failwith "unimplemented"
+    (j:int) (str:string) (acc: string list) : string list =  *)
+let rec get_all_words board = 
+  []
 (* visited.(i).(j) <- true; 
    let word = str^Char.escaped(board.(i).(j)) in
    if isWord word then word::acc else 

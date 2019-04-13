@@ -18,6 +18,7 @@ let rec parse_helper = function
       h::(parse_helper t)
 
 let parse str = 
+  let str = String.lowercase_ascii str in 
   let strings = String.split_on_char ' ' str in 
   let strings = parse_helper strings in 
 
