@@ -83,8 +83,16 @@ let print_board (board:board) : unit=
     ANSITerminal.(print_string [cyan] board_format);
   end
 
+let isWord (word:string) : bool = 
+  true
 
-
-let get_all_words board = 
-  failwith "Unimplemented"
-
+let rec get_all_words (board: board) (visited: (bool array) array) (i:int)
+    (j:int) (str:string) (acc: string list) : string list = 
+  (* visited.(i).(j) <- true; 
+     let word = str^Char.escaped(board.(i).(j)) in
+     if isWord word then word::acc else 
+     for row = i-1 to i+1 do 
+     if row<=4 then 
+     for col = j-1 to j+1 do
+      if col<=4 then
+      get_words_util board visited row col str acc*)
