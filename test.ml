@@ -1,6 +1,7 @@
 open OUnit2
 open State
 open Parse
+open Trie
 
 (** TODO DOCUMENT
     Acknowledgments: this method was taken from a previous assignment
@@ -54,11 +55,20 @@ let parse_tests = [
   "parse start game with spaces" >:: (fun _ -> assert_equal start (parse "  start     game  "));
 ]
 
+let trie_tests = [
+  "is_empty test true" >:: (fun _ -> assert_equal true (is_empty empty));
+  (* "is_empty test false" >:: (fun _ -> assert_equal false (is_empty Node(" ", [Node("a", [])]))); *)
+
+
+
+]
+
 
 let tests =
   "test suite for midterm"  >::: List.flatten [
     state_tests;
     parse_tests;
+    trie_tests;
   ]
 
 let _ = run_test_tt_main tests
