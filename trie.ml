@@ -70,22 +70,13 @@ let rec remove_key nodelist key acc=
     if key = c then remove_key t key acc  else remove_key t key (Node(c,l,b)::acc)
   | [] -> acc
 
-let update_key_bool nodelist key = 
-  match nodelist with
-  | Node(c, l, b)::t ->
-    if key = c then 
 
-      let insert_char k trie (islast:bool) = 
-        match trie with
-        | Node(" ", [], false) -> Node(" ", [Node(k, [], islast)], false)
-        | Node(c, [], b) -> Node(c, [Node(k, [], islast)], b)
-        | Node(c, list, b) ->
-          if contains_key k list then 
-            let curr = get_key_node key list in
-            if check_bool_matching curr islast then Node(c, list, b) else
-            if islast = false then Node(c, list, b) else
-              let new_list = Node(k, )::(remove_key list key [])
-                               Node(c, blah, b)
+(* if contains_key k list then 
+   let curr = get_key_node key list in
+   if check_bool_matching curr islast then Node(c, list, b) else
+   if islast = false then Node(c, list, b) else
+    let new_list = Node(k, )::(remove_key list key [])
+                     Node(c, blah, b) *)
 
 (** TODO DOCUMENT BETTER
     takes in a key and a trie and returns a new trie with the key added
@@ -93,9 +84,6 @@ let update_key_bool nodelist key =
 *)
 let insert key trie : t = 
   failwith "unimplemented"
-(* match trie with 
-   | empty -> Node(" ", [], false) *)
-
 
 
 (** TODO DOCUMENT BETTER
