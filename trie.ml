@@ -16,22 +16,6 @@ let is_empty trie =
   | _ -> false
 
 
-
-(* 
-let parse filename d =
-  let fcode = Pervasives.open_in (d^Filename.dir_sep^filename) in 
-  let str_set = S.empty in
-
-  let return = 
-    let rec getwords fcode str_set=
-      match Pervasives.input_line fcode with
-      | exception End_of_file -> str_set
-      | s -> getwords fcode (parseline s str_set) in
-
-    getwords fcode str_set in
-  Pervasives.close_in fcode;
-  return *)
-
 (** [words f] is a list of all words in a .txt file [f]*)
 let words f = 
   let file = Pervasives.open_in f in
@@ -45,31 +29,57 @@ let words f =
   Pervasives.close_in file;
   return 
 
-let rec contains_key key nodelist = 
-  match nodelist with
-  | Node(c, _, _)::t -> 
-    if key = c then true else contains_key key t
-  | [] -> false
 
-let rec get_key_node key nodelist = 
-  match nodelist with
-  | Node(c, l, b)::t ->
-    if key = c then Node(c, l, b) else get_key_node key t
-  | [] -> failwith "this key does not exist in this list"
+(** [insert_word t lst] is a trie [t] with the word represented by [lst] 
+    inserted. 
+    Requires: 
+    [lst] is a character list of the word ( "ace" -> ['a';'c';'e'] 
 
-let check_bool_matching node bool=
-  match node with
-  |Node(_, _, b) -> if b = bool then true else false
-
-(** TODO DOCUMENT BETTER
-    remove the node with the given key from the nodelist
 *)
-let rec remove_key nodelist key acc=
-  match nodelist with
-  | Node(c, l, b)::t ->
-    if key = c then remove_key t key acc  else remove_key t key (Node(c,l,b)::acc)
-  | [] -> acc
+(* let rec insert_word trie lst = 
+   match lst with
+   | h::t -> 
+    if h not in trie.[]:
+      insert h into trie.[]
+      if t=[]:
+        trie.[h].bool = true
+      insert_word trie.[h] t
+   else:
+      if t=[]:
+        trie.[h].bool = true
+      insert_word trie.[h] t
 
+   | [] -> trie *)
+
+
+
+
+(* let rec contains_key key nodelist = 
+   match nodelist with
+   | Node(c, _, _)::t -> 
+    if key = c then true else contains_key key t
+   | [] -> false
+
+   let rec get_key_node key nodelist = 
+   match nodelist with
+   | Node(c, l, b)::t ->
+    if key = c then Node(c, l, b) else get_key_node key t
+   | [] -> failwith "this key does not exist in this list"
+
+   let check_bool_matching node bool=
+   match node with
+   |Node(_, _, b) -> if b = bool then true else false
+
+   (** TODO DOCUMENT BETTER
+    remove the node with the given key from the nodelist
+ *)
+   let rec remove_key nodelist key acc=
+   match nodelist with
+   | Node(c, l, b)::t ->
+    if key = c then remove_key t key acc  else remove_key t key (Node(c,l,b)::acc)
+   | [] -> acc
+
+<<<<<<< HEAD
 
 (* if contains_key k list then 
    let curr = get_key_node key list in
@@ -77,6 +87,24 @@ let rec remove_key nodelist key acc=
    if islast = false then Node(c, list, b) else
     let new_list = Node(k, )::(remove_key list key [])
                      Node(c, blah, b) *)
+=======
+   let update_key_bool nodelist key = 
+   match nodelist with
+   | Node(c, l, b)::t ->
+    if key = c then 
+
+      let insert_char k trie (islast:bool) = 
+        match trie with
+        | Node(" ", [], false) -> Node(" ", [Node(k, [], islast)], false)
+        | Node(c, [], b) -> Node(c, [Node(k, [], islast)], b)
+        | Node(c, list, b) ->
+          if contains_key k list then 
+            let curr = get_key_node key list in
+            if check_bool_matching curr islast then Node(c, list, b) else
+            if islast = false then Node(c, list, b) else
+              let new_list = Node(k, )::(remove_key list key [])
+                               Node(c, blah, b) *)
+>>>>>>> 946ffcda94db6dd9cd45abf569014da974a046a2
 
 (** TODO DOCUMENT BETTER
     takes in a key and a trie and returns a new trie with the key added
