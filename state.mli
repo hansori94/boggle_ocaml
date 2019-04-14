@@ -15,6 +15,9 @@ val get_words_found : player -> string list
 (** [get_points player] returns the point score of the player *)
 val get_points : player -> int
 
+(** [print_score] gets the player's current score and prints it. *)
+val print_score : player -> unit
+
 (** [update_state player word point] returns a new player state with an updated
     list of found words containing [word] and updated points with the addition 
     of [point]. If [word] has already been found by the player, then it returns
