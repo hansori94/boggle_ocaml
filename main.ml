@@ -12,7 +12,8 @@ let rec start_game input =
 
     (** [play_game board state] plays the game with [board] and updates [state] *)
     let rec play_game board state = 
-      Board.print_board board;
+      Board.print_board board; print_endline " ";
+      State.print_score state;
       (* TODO:
          1) Prints out player's current score and word list in State *)
       ANSITerminal.(print_string [magenta] "Type a word: \n> ");
