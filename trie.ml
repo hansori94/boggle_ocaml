@@ -82,6 +82,9 @@ let rec remove_key nodelist key acc=
 
 
 
+
+
+
 let insert key trie : t = 
   failwith "unimplemented"
 
@@ -93,11 +96,9 @@ let search key trie: bool =
     let length = String.length key in 
     match trie, length with 
     | Node(c, list, b), length -> 
-      if n = full_length - 1 then begin
-        match trie with 
-        | Node(c, list, b) -> 
-          if b = true then true else false
-      end else
+      if n = full_length then 
+        if b = true then true else false
+      else
       if contains_key (Char.escaped key.[n]) list then
         let curr = get_key_node (Char.escaped key.[n]) list in 
         search_help (String.sub key (n+1) (length - 1)) curr (n+1) else false
@@ -105,4 +106,27 @@ let search key trie: bool =
   in 
 
   search_help key trie 0
+
+let rec print_list list = 
+  match list with
+  | [] -> print_string "\n"
+  | Node(h, _, _)::t -> print_string h; print_list t
+
+let rec insert_word key trie n full_length: t = 
+  match trie with
+  | Node(c, list, b) -> 
+    (* print_int n;
+       print_string key;
+       print_string c;
+       print_list list;
+       print_endline "     "; *)
+    if n = full_length then 
+      Node(c, list, true)
+    else
+    if contains_key (Char.escaped key.[0]) list then 
+      let curr = get_key_node (Char.escaped key.[0]) list in 
+      insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length 
+    else 
+      let new_list = (Node((Char.escaped key.[0]), [], false))::list in 
+      insert_word key (Node(c, new_list, b)) n full_length
 
