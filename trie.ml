@@ -93,6 +93,7 @@ let rec insert_word trie lst root =
       insert_word trie t (find_subtrie children_list h)
     else
       let new_trie = Node (h, [], false) in
+      (* let updated_subtree = update_children root (new_trie::children_list) in *)
       (* creating a new list of children with a new trie 
          with value [h] appended *)
       let updated_trie = update_children trie (new_trie::children_list) in
@@ -101,17 +102,17 @@ let rec insert_word trie lst root =
       insert_word updated_trie t (find_subtrie children_list h)
   | [] -> trie 
 
-  (* | h::[] -> 
-     if (List.mem h (keys_list)) 
-     then 
-     let update_list = update_children (trie (make_true (find_subtrie children_list h)))
+(* | h::[] -> 
+   if (List.mem h (keys_list)) 
+   then 
+   let update_list = update_children (trie (make_true (find_subtrie children_list h)))
 
-     insert_word trie [] (find_subtrie children_list h)
-     else
-     let new_trie = Node (h, [], true) in
-     let updated_list = update_children trie (new_trie::children_list) in
-     insert_word updated_list [] (find_subtrie children_list h) *)
-  | [] -> trie 
+   insert_word trie [] (find_subtrie children_list h)
+   else
+   let new_trie = Node (h, [], true) in
+   let updated_list = update_children trie (new_trie::children_list) in
+   insert_word updated_list [] (find_subtrie children_list h) *)
+(* | [] -> trie  *)
 (* with last node changed to true *)
 
 
@@ -177,6 +178,15 @@ let rec print_list list =
   | [] -> print_string "\n"
   | Node(h, _, _)::t -> print_string h; print_list t
 
+let rec insert_char key trie : t = 
+  match trie with 
+  | Node(c, list, b) ->
+    if contains_key key list then
+      trie
+    else
+      let new_list = (Node(key, [], false))::list in 
+      insert_char key (Node(c, new_list, b))
+
 let rec insert_word key trie n full_length: t = 
   match trie with
   | Node(c, list, b) -> 
@@ -192,6 +202,9 @@ let rec insert_word key trie n full_length: t =
       let curr = get_key_node (Char.escaped key.[0]) list in 
       insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length 
     else 
-      let new_list = (Node((Char.escaped key.[0]), [], false))::list in 
-      insert_word key (Node(c, new_list, b)) n full_length
+      (* let new_list = (Node((Char.escaped key.[0]), [], false))::list in 
+         insert_word key (Node(c, new_list, b)) n full_length *)
+      insert_word key (insert_char (Char.escaped key.[0]) trie) n full_length
+
+
 
