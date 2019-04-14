@@ -64,6 +64,8 @@ let trie_tests = [
 ]
 
 
+
+
 let tests =
   "test suite for midterm"  >::: List.flatten [
     state_tests;
