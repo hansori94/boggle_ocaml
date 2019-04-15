@@ -99,8 +99,8 @@ let rec replace t idx sub_t=
             (* * [insert_word t lst] is a trie [t] with the word represented by [lst] 
                 inserted. 
                 Requires: 
-                [lst] is a character list of the word ( "ace" -> ['a';'c';'e'] 
-            *)
+    [lst] is a character list of the word ( "ace" -> ['a';'c';'e'] 
+*)
             let rec insert_word trie lst root i = 
               let children_list = get_children root in (* children tries of current root *)
               let keys_list = get_keys children_list [] in (* keys of the children *)
