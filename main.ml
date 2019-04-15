@@ -76,7 +76,14 @@ let rec start_game input =
 let main () = 
   ANSITerminal.(print_string [magenta; Bold] "\nWelcome to Boggle!\n");
   (* TODO: Write Instructions *)
-  ANSITerminal.(print_string [magenta] "\ninstructions instructions...");
+  ANSITerminal.(print_string [yellow] 
+                  "\nForm words by stringing together adjacent\n\
+                   characters in any direction.\n\
+                   How to Play:\n\
+                   1. Words only count once!\n\
+                   2. A specifc character may only be used once in a single word.\n\
+                   3. Case doesn't matter!\n\
+                   Have fun!");
   ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing!\n");
   print_string "> ";
   match read_line () with
