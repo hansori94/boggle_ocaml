@@ -11,7 +11,7 @@ let rec start_game input =
     let state = State.init_player in
 
     (** [play_game board state] plays the game with [board] and updates [state] *)
-    let rec play_game board state player = 
+    let rec play_game board state = 
       Board.print_board board; print_endline " ";
       State.print_score state;
       (* TODO:
@@ -20,22 +20,16 @@ let rec start_game input =
       let input = read_line () in
       match Parse.parse input with
       | Word(word) -> begin
-          try State.check_valid_word (player) (List.hd word) (board) with
-          | word -> print_endline "word";
-            play_game board state player
+          let w = List.hd word in
+          try (play_game board (State.update_state (state) (State.check_valid_word state w)))
+          with
           | TooShort ->
-            ANSITerminal.(print_string [magenta] "Your word is too short. It must have at least 3 letters...\n");
-            play_game board state player
+            ANSITerminal.(print_string [magenta] "Your word is too short. It must have at least 3 letters... Try a longer word! \n");
+            play_game board state 
           | Duplicate -> 
             ANSITerminal.(print_string [magenta] "You already found this word. Try another word! \n");
-            play_game board state player
+            play_game board state
         end
-      (* TODO: 
-         1) check that word is valid
-         2) if valid, update user's score and word list in State. 
-         call play_game with the update state
-         3) if invalid, print a message letting the user know its not a valid word
-         and call play_game with the same state *)
 
       | Quit -> 
         ANSITerminal.(print_string [magenta] "Quitting the game...\n");
@@ -56,14 +50,14 @@ let rec start_game input =
         help input
       | exception Empty ->
         ANSITerminal.(print_string [magenta] "You didn't type anything. Type a word: \n>"); 
-        play_game board state player
+        play_game board state 
       | exception Malformed -> 
         ANSITerminal.(print_string [magenta] "Bad input. Type a word: \n>");
-        play_game board state player
+        play_game board state 
       | _ -> ()
 
     in 
-    play_game board state player
+    play_game board state
   | exception Empty -> 
     ANSITerminal.(print_string [magenta] "You didn't type anything. Type 'start game' to start playing!\n"); 
     print_string "> ";

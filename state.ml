@@ -37,7 +37,7 @@ let update_state player word =
     } in 
     new_player_state
 
-let check_valid_word player str board = 
+let check_valid_word player str = 
   if (String.length str < 3) then raise (TooShort) else
   if (List.mem str (get_words_found player)) then raise (Duplicate) else
     str
