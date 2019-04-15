@@ -4,15 +4,21 @@ exception Duplicate
 exception TooShort
 
 type player = {
+  init_time: float;
   found_words: string list;
   points: int;
 }
 
 let init_player =
   {
+    init_time = Unix.gettimeofday ();
     found_words = [];
     points = 0;
   }
+
+let get_time player =
+  Unix.gettimeofday () -. player.init_time
+
 
 let get_words_found player = 
   player.found_words
@@ -31,10 +37,10 @@ let update_state player word =
   if(List.mem word word_list) then player else
     let new_word_list = word::word_list in 
     let new_points = (calc_points word) + (get_points player) in 
-    let new_player_state = { 
-      found_words = new_word_list;
-      points = new_points;
-    } in 
+    let new_player_state = { player with
+                             found_words = new_word_list;
+                             points = new_points;
+                           } in 
     new_player_state
 
 let check_valid_word player str = 
