@@ -1,5 +1,7 @@
 open Board
 
+exception Duplicate
+exception TooShort
 
 type player = {
   found_words: string list;
@@ -32,6 +34,10 @@ let update_state player word point =
     } in 
     new_player_state
 
-let check_valid_word str board = 
-  let str_list = Board.get_all_words board in 
-  List.mem str str_list
+let check_valid_word player str board = 
+  if (String.length str < 3) then raise (TooShort) else
+  if (List.mem str (get_words_found player)) then raise (Duplicate) else
+    str
+
+(* let str_list = Board.get_all_words board in 
+   List.mem str str_list *)
