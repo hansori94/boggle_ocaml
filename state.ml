@@ -29,6 +29,20 @@ let get_points player =
 let print_score (player : player) : unit = 
   ANSITerminal.(print_string [red] ("Score: "^(string_of_int(get_points player))^"\n"))
 
+let rec print_list lst = 
+  match lst with 
+  | [] -> print_string "\n"
+  | h::[] -> ANSITerminal.(print_string [red] ((h)^" ")); print_string "\n"
+  | h::t -> ANSITerminal.(print_string [red] ((h)^", ")); print_list t
+
+let print_words player = 
+  let words = player.found_words in 
+  if List.length (words) = 0 then
+    ANSITerminal.(print_string [red] "You haven't found any words yet. \n")
+  else ANSITerminal.(print_string [red] "You found: "); 
+  print_list (player.found_words)
+
+
 let calc_points word = 
   String.length word
 

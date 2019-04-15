@@ -14,6 +14,7 @@ let rec start_game input =
     let rec play_game board state = 
       Board.print_board board; print_endline " ";
       State.print_score state;
+      State.print_words state;
       (* TODO:
          1) Prints out player's current score and word list in State *)
       ANSITerminal.(print_string [magenta] "Type a word: \n> ");
@@ -24,10 +25,10 @@ let rec start_game input =
           try (play_game board (State.update_state (state) (State.check_valid_word state w)))
           with
           | TooShort ->
-            ANSITerminal.(print_string [magenta] "Your word is too short. It must have at least 3 letters... Try a longer word! \n");
+            ANSITerminal.(print_string [magenta; Bold] "Your word is too short. It must have at least 3 letters... Try a longer word! \n");
             play_game board state 
           | Duplicate -> 
-            ANSITerminal.(print_string [magenta] "You already found this word. Try another word! \n");
+            ANSITerminal.(print_string [magenta; Bold] "You already found this word. Try another word! \n");
             play_game board state
         end
 
