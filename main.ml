@@ -20,37 +20,42 @@ let rec start_game input =
       let input = read_line () in
       match Parse.parse input with
       | Word(word) ->
-        (* TODO: 
-           1) check that word is valid
-           2) if valid, update user's score and word list in State. 
-           call play_game with the update state
-           3) if invalid, print a message letting the user know its not a valid word
-           and call play_game with the same state *)
-        print_endline "word"
-      | Quit -> 
-        ANSITerminal.(print_string [magenta] "Quitting the game...\n");
-        ANSITerminal.(print_string [magenta] "Would you like to play another game? Type (y/n): \n> ");
-        let input = read_line () in
+        match State.check_valid_word with
+        | w -> 
+        | exception TooShort ->
+        | exception Duplicate -> 
 
-        (** [help input] starts a new board or quits the game based on user input (y,n) *)
-        let rec help input = 
-          match String.lowercase_ascii input with 
-          | "y" -> 
-            ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
-            start_game "start game"
-          | "n" -> ANSITerminal.(print_string [magenta; Bold] "Goodbye! \n");
-          | _ -> ANSITerminal.(print_string [magenta] "Wrong input. Please type (y/n): \n> ");
-            help (read_line ())
-        in 
+          (* TODO: 
+             1) check that word is valid
+             2) if valid, update user's score and word list in State. 
+             call play_game with the update state
+             3) if invalid, print a message letting the user know its not a valid word
+             and call play_game with the same state *)
+          print_endline "word"
+        | Quit -> 
+          ANSITerminal.(print_string [magenta] "Quitting the game...\n");
+          ANSITerminal.(print_string [magenta] "Would you like to play another game? Type (y/n): \n> ");
+          let input = read_line () in
 
-        help input
-      | exception Empty ->
-        ANSITerminal.(print_string [magenta] "You didn't type anything. Type a word: \n>"); 
-        play_game board state
-      | exception Malformed -> 
-        ANSITerminal.(print_string [magenta] "Bad input. Type a word: \n>");
-        play_game board state
-      | _ -> ()
+          (** [help input] starts a new board or quits the game based on user input (y,n) *)
+          let rec help input = 
+            match String.lowercase_ascii input with 
+            | "y" -> 
+              ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
+              start_game "start game"
+            | "n" -> ANSITerminal.(print_string [magenta; Bold] "Goodbye! \n");
+            | _ -> ANSITerminal.(print_string [magenta] "Wrong input. Please type (y/n): \n> ");
+              help (read_line ())
+          in 
+
+          help input
+        | exception Empty ->
+          ANSITerminal.(print_string [magenta] "You didn't type anything. Type a word: \n>"); 
+          play_game board state
+        | exception Malformed -> 
+          ANSITerminal.(print_string [magenta] "Bad input. Type a word: \n>");
+          play_game board state
+        | _ -> ()
 
     in 
     play_game board state
