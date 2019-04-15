@@ -21,11 +21,14 @@ let get_points player =
 let print_score (player : player) : unit = 
   ANSITerminal.(print_string [red] ("Score: "^(string_of_int(get_points player))^"\n"))
 
-let update_state player word point =
+let calc_points word = 
+  String.length word
+
+let update_state player word =
   let word_list = get_words_found player in 
   if(List.mem word word_list) then player else
     let new_word_list = word::word_list in 
-    let new_points = point + (get_points player) in 
+    let new_points = (calc_points word) + (get_points player) in 
     let new_player_state = { 
       found_words = new_word_list;
       points = new_points;
