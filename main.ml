@@ -17,6 +17,9 @@ let print_time (status: Unix.interval_timer_status) =
 (** [start_game input] plays the game *)
 let rec start_game input state = 
   match Parse.parse input with
+  | Quit -> 
+    ANSITerminal.(print_string [magenta] "Quitting the game... Goodbye!\n");
+    ()
   | Start -> 
     let board = Board.make_board 4 4 in
     (* let state = State.init_player in *)
@@ -25,7 +28,6 @@ let rec start_game input state =
       it_interval = 120.;
       it_value = 120.;
     } in
-
 
     (** [play_game board state] plays the game with [board] and updates [state] *)
     let rec play_game board state = 
@@ -100,6 +102,7 @@ let rec start_game input state =
     ANSITerminal.(print_string [magenta] "Wrong input. type 'start game' to start playing!\n");
     print_string "> ";
     start_game (read_line()) state
+
 
 
 
