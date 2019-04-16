@@ -119,7 +119,7 @@ let main () =
                    2. A specifc character may only be used once in a single word.\n\
                    3. Case doesn't matter!\n\
                    Have fun!");
-  ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing!\n");
+  ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing, \nor type 'quit game' to exit!\n");
   print_string "> ";
   match read_line () with
   | input -> start_game input State.init_player
