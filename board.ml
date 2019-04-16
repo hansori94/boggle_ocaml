@@ -74,10 +74,22 @@ let make_board m n : board =
     consisting of 4 rows and 4 columns with spaces between each char *)
 let print_board (board:board) : unit=
   let board_format = 
-    Char.escaped board.(0).(0) ^ "  " ^ Char.escaped board.(0).(1) ^ "  " ^ Char.escaped board.(0).(2) ^ "  " ^ Char.escaped board.(0).(3) ^ "\n" ^
-    Char.escaped board.(1).(0) ^ "  " ^ Char.escaped board.(1).(1) ^ "  " ^ Char.escaped board.(1).(2) ^ "  " ^ Char.escaped board.(1).(3) ^ "\n" ^ 
-    Char.escaped board.(2).(0) ^ "  " ^ Char.escaped board.(2).(1) ^ "  " ^ Char.escaped board.(2).(2) ^ "  " ^ Char.escaped board.(2).(3) ^ "\n" ^
-    Char.escaped board.(3).(0) ^ "  " ^ Char.escaped board.(3).(1) ^ "  " ^ Char.escaped board.(3).(2) ^ "  " ^ Char.escaped board.(3).(3) ^ "\n" in 
+    Char.escaped board.(0).(0) ^ "  " ^ 
+    Char.escaped board.(0).(1) ^ "  " ^ 
+    Char.escaped board.(0).(2) ^ "  " ^ 
+    Char.escaped board.(0).(3) ^ "\n" ^
+    Char.escaped board.(1).(0) ^ "  " ^ 
+    Char.escaped board.(1).(1) ^ "  " ^ 
+    Char.escaped board.(1).(2) ^ "  " ^ 
+    Char.escaped board.(1).(3) ^ "\n" ^ 
+    Char.escaped board.(2).(0) ^ "  " ^ 
+    Char.escaped board.(2).(1) ^ "  " ^ 
+    Char.escaped board.(2).(2) ^ "  " ^ 
+    Char.escaped board.(2).(3) ^ "\n" ^
+    Char.escaped board.(3).(0) ^ "  " ^ 
+    Char.escaped board.(3).(1) ^ "  " ^ 
+    Char.escaped board.(3).(2) ^ "  " ^ 
+    Char.escaped board.(3).(3) ^ "\n" in 
 
   begin
     ANSITerminal.(print_string [cyan; Bold] board_format);

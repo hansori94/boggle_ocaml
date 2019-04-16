@@ -14,6 +14,7 @@ type input =
   | Quit
   | Word of words
   | Start
+  | Shake
 
 (** Raised if empty input is encountered. *)
 exception Empty
@@ -28,6 +29,7 @@ exception Malformed
     - [parse "    quit game   "] is [Quit]
     - [parse "Word word"] is [Word "word"]. 
     - [parse "start game"] is [Start]
+    - [parse "shake it"] is [Shake]
 
     Requires: [str] contains only alphanumeric (A-Z, a-z, 0-9) and space 
     characters (only ASCII character code 32; not tabs or newlines, etc.).
