@@ -4,6 +4,7 @@ type board = (char array) array
 let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
                 'p';'q';'r';'s';'t';'u';'v';'w';'x';'y';'z']
 
+(** first set of boggle dice *)
 let die1 = ['a';'a';'e';'e';'g';'n'] 
 let die2 = ['e';'l';'r';'t';'t';'y']
 let die3 = ['a';'o';'o';'t';'t';'w']
@@ -21,8 +22,10 @@ let die14 = ['a';'f';'f';'k';'p';'s']
 let die15 = ['h';'l';'n';'n';'r';'z']
 let die16 = ['d';'e';'i';'l';'r';'x']
 
+(** array in which to hold our dice *)
 let dicearray = Array.make_matrix 4 4 []
 
+(** filled array of dice *)
 let dice = 
   dicearray.(0).(0) <- die1;
   dicearray.(0).(1) <- die2;
@@ -44,8 +47,8 @@ let dice =
 
 
 
-(** [random_letter list] takes in a char list and returns a randomly selected
-    char from that char list
+(** [random_letter list] takes in a char list [list] and returns a randomly 
+    selected char from that char list
 *)
 let random_letter str : char = 
   Random.self_init ();
@@ -70,8 +73,6 @@ let make_board m n : board =
 
   arr
 
-(** [print_board board] prints to the screen the [board] in the style of boggle,
-    consisting of 4 rows and 4 columns with spaces between each char *)
 let print_board (board:board) : unit=
   let board_format = 
     Char.escaped board.(0).(0) ^ "  " ^ 
@@ -95,6 +96,8 @@ let print_board (board:board) : unit=
     ANSITerminal.(print_string [cyan; Bold] board_format);
   end
 
+(** [isWord word] checks if [word] is a real word in the dictionary
+    //////not fully implemented/////// *)
 let isWord (word:string) : bool = 
   true
 (* 

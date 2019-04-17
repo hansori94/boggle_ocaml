@@ -40,6 +40,7 @@ exception Malformed
     is {i malformed} if the verb is neither "quit" nor "start",
     or if the verb is "quit" and there is an input besides "game",
     or if the verb is "start" and there is an input besides "game",
+    or if the verb is "shake" and there is an input besides "it",
     or if there is an object phrase of more than one word with the verb not being
     "quit" or "start"
 *)

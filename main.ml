@@ -2,14 +2,22 @@ open Board
 open Parse
 open State
 
+(** raised if game timer runs out *)
 exception TimeOut
 
+(** [timer_helper x] takes in a function [x] and returns unit, used to help 
+    start the timer
+*)
 let timer_helper x =
   ()
 
+(** [timeout] catches the SIGALRM raised by the timer and returns 
+    exception TimeOut
+*)
 let timeout _ = 
   raise TimeOut
 
+(** [print_time status] prints the time remaining in the game at time [status] *)
 let print_time (status: Unix.interval_timer_status) = 
   let timeleft = int_of_float status.it_value in 
   ANSITerminal.(print_string [red] ("Time Remaining: \
