@@ -194,10 +194,10 @@ let rec insert_word key trie n full_length: t =
   match trie with
   | Node(c, list, b) -> 
     (* print_int n; print_string ("\nYet to be Inserted: "^key); print_string ("\nKey of current Node: "^c^"\nChildren: "); print_list list; print_endline "     "; *)
-    if n = full_length then 
+    if n = full_length then (* when you're on the last letter of the word being inputted *)
       Node(c, list, true)
     else
-    if contains_key (Char.escaped key.[0]) list then 
+    if contains_key (Char.escaped key.[0]) list then (* if the key is already a child of the given node *)
       let curr = get_key_node (Char.escaped key.[0]) list in 
       update_children trie ((insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length)::(remove_key list (Char.escaped key.[0]) []))
     else 
