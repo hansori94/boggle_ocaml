@@ -5,6 +5,7 @@ type input =
   | Quit
   | Word of words
   | Start
+  | Shake
 
 exception Empty
 
@@ -28,6 +29,7 @@ let parse str =
     match strings with
     | h::t::[] when h = "quit" && t = "game" -> Quit
     | h::t::[] when h = "start" && t = "game" -> Start
+    | h::t::[] when h = "shake" && t = "it" -> Shake
     | _ -> raise (Malformed)
   end
   else

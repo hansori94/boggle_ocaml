@@ -27,7 +27,9 @@ val print_score : player -> unit
 (** [print_words player] prints the list of words that the player has found. *)
 val print_words : player -> unit
 
-(** [calc_score] calculates the value of a valid word inputted by the player *)
+(** [calc_score word] calculates the value of a valid word [word] 
+    inputted by the player 
+*)
 val calc_points : string -> int
 
 (** [update_state player word point] returns a new player state with an updated
