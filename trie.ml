@@ -160,9 +160,9 @@ let search key trie: bool =
       if n = full_length then 
         if b = true then true else false
       else
-      if contains_key (Char.escaped key.[n]) list then
-        let curr = get_key_node (Char.escaped key.[n]) list in 
-        search_help (String.sub key (n+1) (length - 1)) curr (n+1) else false
+      if contains_key (Char.escaped key.[0]) list then
+        let curr = get_key_node (Char.escaped key.[0]) list in 
+        search_help (String.sub key 1 (full_length - (n+1))) curr (n+1) else false
 
   in 
 
