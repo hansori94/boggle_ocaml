@@ -38,7 +38,7 @@ let rec print_list lst =
 let print_words player = 
   let words = player.found_words in 
   if List.length (words) = 0 then
-    ANSITerminal.(print_string [red] "You haven't found any words yet. \n")
+    ANSITerminal.(print_string [red] "You haven't found any words yet.")
   else ANSITerminal.(print_string [red] "You found: "); 
   print_list (player.found_words)
 

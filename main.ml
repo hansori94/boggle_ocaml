@@ -27,7 +27,7 @@ let print_time (status: Unix.interval_timer_status) =
 let rec start_game input state = 
   match Parse.parse input with
   | Quit -> 
-    ANSITerminal.(print_string [magenta] "Quitting the game... Goodbye!\n");
+    ANSITerminal.(print_string [magenta;Bold] "Quitting the game... Goodbye!\n");
     ()
   | Start -> 
     let board = Board.make_board 4 4 in
@@ -60,12 +60,12 @@ let rec start_game input state =
               ANSITerminal.(print_string [magenta; Bold] "Your word is too short. \
                                                           It must have at least \
                                                           3 letters...\
-                                                          Try a longer word! \n");
+                                                          Try a longer word!\n\n");
               play_game board state 
             | Duplicate -> 
-              ANSITerminal.(print_string [magenta; Bold] "You already found this\
-                                                          word.\
-                                                          Try another word! \n");
+              ANSITerminal.(print_string [magenta; Bold] "You already found this \
+                                                          word. \
+                                                          Try another word!\n\n");
               play_game board state
           end
 
@@ -90,15 +90,14 @@ let rec start_game input state =
           in 
 
           help input
-        | Shake -> ANSITerminal.(print_string [blue; Bold] "Commencing shake!\n"); 
+        | Shake -> ANSITerminal.(print_string [blue; Bold] "Commencing shake!\n\n"); 
           start_game "start game" State.init_player 
 
         | exception Empty ->
-          ANSITerminal.(print_string [magenta] "You didn't type anything. \
-                                                Type a word: \n>"); 
+          ANSITerminal.(print_string [magenta;Bold] "You didn't type anything.\n\n"); 
           play_game board state 
         | exception Malformed -> 
-          ANSITerminal.(print_string [magenta] "Bad input. Type a word: \n>");
+          ANSITerminal.(print_string [magenta;Bold] "Bad input.\n\n");
           play_game board state 
         | _ -> ()
       with 
@@ -116,8 +115,9 @@ let rec start_game input state =
     timer_helper (Unix.setitimer timer timer_starter);
     play_game board state
   | exception Empty -> 
-    ANSITerminal.(print_string [magenta] "You didn't type anything.\n
-                                          Type 'start game' to start playing!\n"); 
+    ANSITerminal.(print_string [magenta;] "You didn't type anything. \
+                                           Type 'start game' to start \
+                                           playing!\n"); 
     print_string "> ";
     start_game (read_line()) state
   | exception Malformed -> 
@@ -148,8 +148,8 @@ let main () =
                    3. A specifc character may only be used once in a single word.\n\
                    4. Case doesn't matter!\n\
                    Have fun!");
-  ANSITerminal.(print_string [blue] "\n...and type 'shake it' while playing \
-                                     to reset the game with a new board!\n");       
+  ANSITerminal.(print_string [blue;Bold] "\n...and type 'shake it' while playing \
+                                          to reset the game with a new board!\n");       
   ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing, \n\
                                         or type 'quit game' to exit!\n");
   print_string "> ";

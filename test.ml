@@ -71,8 +71,6 @@ let parse_tests = [
    "is_empty test true" >:: (fun _ -> assert_equal true (is_empty empty));
    (* "is_empty test false" >:: (fun _ -> assert_equal false (is_empty Node(" ", [Node("a", [])]))); *)
 
-
-
    ] *)
 
 
