@@ -1,4 +1,4 @@
-MODULES=state main parse board
+MODULES=state main parse board trie
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

@@ -3,18 +3,18 @@ type key = string
 
 (* the key is the value at the node (ex: "a") and the t list is its children
    and the bool is whether its the end of a word *)
-type t = Node of key * t list * bool * int
-(* type t = Node of key * t array * bool *)
+(* type t = Node of key * t list * bool * int *)
+type t = Node of key * t list * bool
 
 
 
 let empty : t = 
-  Node(" ", [], false, 0)
+  Node(" ", [], false)
 
 
 let is_empty trie = 
   match trie with
-  | Node(" ", [], false, 0) -> true
+  | Node(" ", [], false) -> true
   | _ -> false
 
 
@@ -34,7 +34,7 @@ let words f =
 (** [get_children t] returns the children of the trie [t] *)
 let get_children t = 
   match t with
-  | Node (_, lst, _, _) -> lst
+  | Node (_, lst, _) -> lst
 
 (** [get_children lst acc] returns the list of keys of trie list [lst] 
     Requires: [acc] is empty *)
@@ -42,7 +42,7 @@ let rec get_keys lst acc : key list =
   match lst with 
   | h::t -> begin 
       match h with
-      | Node (k, _, _, _) -> 
+      | Node (k, _, _) -> 
         get_keys t (k::acc)
     end
   | [] -> acc
@@ -53,17 +53,12 @@ let rec find_subtrie lst c =
   match lst with
   | h::t -> begin 
       match h with
-      | Node (k, _, _, _) -> 
+      | Node (k, _, _) -> 
         if k = c then h else find_subtrie t c
     end
   | [] -> failwith "c is not in lst"
 
-(** [update_children t lst] is a trie [t] with its children tries 
-    replaced with [lst]
-*)
-let update_children t lst = 
-  match t with
-  | Node (k, _, bool, _) -> Node (k, lst, bool, _)
+
 
 
 let rec remove_subtrie lst c acc = 
@@ -82,11 +77,11 @@ let make_true t =
 *)
 
 
-let rec insert_word trie lst root = 
-  let children_list = get_children root in (* children tries of current root *)
-  let keys_list = get_keys children_list [] in (* keys of the children *)
-  match lst with (* matching each character of the word *)
-  | h::t -> 
+(* let rec insert_word trie lst root = 
+   let children_list = get_children root in (* children tries of current root *)
+   let keys_list = get_keys children_list [] in (* keys of the children *)
+   match lst with (* matching each character of the word *)
+   | h::t -> 
     (* if a given character is not a node in a trie yet *)
     if (List.mem h (keys_list)) 
     then 
@@ -100,7 +95,7 @@ let rec insert_word trie lst root =
       (* recursively calling the function with the new children, 
          with [root] set to the next subtrie *)
       insert_word updated_trie t (find_subtrie children_list h)
-  | [] -> trie 
+   | [] -> trie  *)
 
 (* | h::[] -> 
    if (List.mem h (keys_list)) 
@@ -178,33 +173,36 @@ let rec print_list list =
   | [] -> print_string "\n"
   | Node(h, _, _)::t -> print_string h; print_list t
 
-let rec insert_char key trie : t = 
+(** requires the key to be a string representation of a single char *)
+let insert_char key trie : t = 
   match trie with 
   | Node(c, list, b) ->
     if contains_key key list then
       trie
     else
       let new_list = (Node(key, [], false))::list in 
-      insert_char key (Node(c, new_list, b))
+      Node(c, new_list, b)
+
+(** [update_children t lst] is a trie [t] with its children tries 
+    replaced with [lst]
+*)
+let update_children t lst = 
+  match t with
+  | Node (k, _, bool) -> Node (k, lst, bool)
 
 let rec insert_word key trie n full_length: t = 
   match trie with
   | Node(c, list, b) -> 
-    (* print_int n;
-       print_string key;
-       print_string c;
-       print_list list;
-       print_endline "     "; *)
+    (* print_int n; print_string ("\nYet to be Inserted: "^key); print_string ("\nKey of current Node: "^c^"\nChildren: "); print_list list; print_endline "     "; *)
     if n = full_length then 
       Node(c, list, true)
     else
     if contains_key (Char.escaped key.[0]) list then 
       let curr = get_key_node (Char.escaped key.[0]) list in 
-      insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length 
+      update_children trie ((insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length)::(remove_key list (Char.escaped key.[0]) []))
     else 
-      (* let new_list = (Node((Char.escaped key.[0]), [], false))::list in 
-         insert_word key (Node(c, new_list, b)) n full_length *)
-      insert_word key (insert_char (Char.escaped key.[0]) trie) n full_length
+      let new_node = (insert_char (Char.escaped key.[0]) trie) in 
+      insert_word key new_node n full_length
 
 
 
