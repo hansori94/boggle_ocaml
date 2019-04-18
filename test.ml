@@ -1,7 +1,7 @@
 open OUnit2
 open State
 open Parse
-(* open Trie *)
+open Trie
 
 (** [cmp_set_like_lists lst1 lst2] checks if two lists contain the same values
     ignoring order
@@ -67,11 +67,43 @@ let parse_tests = [
   (fun _ -> assert_equal start (parse "  start     game  "));
 ]
 
-(* let trie_tests = [
-   "is_empty test true" >:: (fun _ -> assert_equal true (is_empty empty));
-   (* "is_empty test false" >:: (fun _ -> assert_equal false (is_empty Node(" ", [Node("a", [])]))); *)
+let h_trie = insert ["h"] empty
+let example_trie = insert (words "example.txt") empty
 
-   ] *)
+let trie_tests = [
+  "is_empty test true" >:: (fun _ -> assert_equal true (is_empty empty));
+  "is_empty test false" >:: (fun _ -> assert_equal false (is_empty h_trie));
+
+  (* insertion/search tests *)
+  "insert and search for a word" >:: 
+  (fun _ -> assert_equal true (search "hello" (insert ["hello"] empty)));
+  "insert and search for a not present word" >::
+  (fun _ -> assert_equal false (search "bye" (insert ["hello"] empty)));
+  "insert and search for a partial word" >::
+  (fun _ -> assert_equal false (search "hell" (insert ["hello"] empty)));
+  "search for a word in an empty trie" >::
+  (fun _ -> assert_equal false (search "hello" empty));
+  "insert multiple words" >::
+  (fun _ -> assert_equal true (search "hell" 
+                                 (insert ["hello";"hell";"help";"also"] empty)));
+  "insert already inserted word" >::
+  (fun _ -> assert_equal (insert ["hello"] empty) 
+      (insert ["hello"] (insert ["hello"] empty)));
+  "search for words imported from file" >::
+  (fun _ -> assert_equal true 
+      ((search "delthyrial" example_trie) &&
+       (search "delthyrium" example_trie) &&
+       (search "deltic" example_trie) &&
+       (search "deltidia" example_trie)));
+  "search for not present words imported from file" >::
+  (fun _ -> assert_equal false 
+      ((search "elthyrial" example_trie) ||
+       (search "delthyriu" example_trie) ||
+       (search "delic" example_trie) ||
+       (search "pepperoni" example_trie)));
+
+
+]
 
 
 
@@ -80,7 +112,7 @@ let tests =
   "test suite for midterm"  >::: List.flatten [
     state_tests;
     parse_tests;
-    (* trie_tests; *)
+    trie_tests;
   ]
 
 let _ = run_test_tt_main tests

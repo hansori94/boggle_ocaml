@@ -42,7 +42,9 @@ let print_words player =
   else ANSITerminal.(print_string [red] "You found: "); 
   print_list (player.found_words)
 
-
+(** [calc_score word] calculates the value of a valid word [word] 
+    inputted by the player 
+*)
 let calc_points word = 
   String.length word
 

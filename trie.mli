@@ -13,13 +13,18 @@ val empty : t
 (** [is_empty trie] returns true if the [trie] is empty and false otherwise *)
 val is_empty: t -> bool
 
-(** TODO DOCUMENT BETTER
-    takes in a key list and a trie and returns a new trie with all the keys added
-    or if the keys are already there just returns the same trie
+(** TODO - UNEXPOSE *)
+val words : string -> string list
+
+(** [insert keylst trie] takes in a key list [keylst] and a trie [trie] and 
+    returns a new trie with all the keys added or if the keys are already 
+    there just returns a trie with all the same nodes present
 *)
 val insert : key list -> t -> t
 
-(** TODO DOCUMENT BETTER
-    returns whether a given key is present in a trie
+(** [search key trie] returns true if a given string [key] is present in a trie
+    [trie], where present is defined as having all the letters in the proper order
+    with the last letter's boolean value being true.  Returns false if the 
+    string [key] is not in the trie.
 *)
 val search : key -> t -> bool

@@ -7,7 +7,6 @@ type key = string
 type t = Node of key * t list * bool
 
 
-
 let empty : t = 
   Node(" ", [], false)
 
