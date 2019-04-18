@@ -47,33 +47,140 @@ let rec get_keys lst acc : key list =
     end
   | [] -> acc
 
-(** [find_subtrie lst c] is a trie [t] with a key value [c] from the list of
-    tries [lst] *)
-let rec find_subtrie lst c = 
-  match lst with
-  | h::t -> begin 
-      match h with
-      | Node (k, _, _) -> 
-        if k = c then h else find_subtrie t c
-    end
-  | [] -> failwith "c is not in lst"
 
+(** [contains_key key nodelist] returns a boolean value indicating whether or not 
+    a key [key] is the key of a node present in [nodelist] 
+*)
+let rec contains_key key nodelist = 
+  match nodelist with
+  | Node(c, _, _)::t -> 
+    if key = c then true else contains_key key t
+  | [] -> false
 
+(** [get_key_node key nodelist] returns the node that has key [key] in the 
+    nodelist
+    Requires: Node possessing [key] is present in [nodelist]
+*)
+let rec get_key_node key nodelist = 
+  match nodelist with
+  | Node(c, l, b)::t ->
+    if key = c then Node(c, l, b) else get_key_node key t
+  | [] -> failwith "this key does not exist in this list"
 
-
-let rec remove_subtrie lst c acc = 
-  match lst with
-  | h::t -> if h<>c then remove_subtrie t c (c::acc) else remove_subtrie t c (acc)
+(** [remove_key nodelist key acc] removes the node that has key [key] from 
+    [nodelist] and returns the rest of the [nodelist]. If called on a [nodelist]
+    that does not have a node with [key], will return a nodelist containing 
+    all the same elements as the [nodelist]
+*)
+let rec remove_key nodelist key acc=
+  match nodelist with
+  | Node(c, l, b)::t ->
+    if key = c then remove_key t key acc  else remove_key t key (Node(c,l,b)::acc)
   | [] -> acc
 
-let make_true t = 
+
+
+(** [print_list list] prints the list of keys present in a nodelist [list] *)
+let rec print_list list = 
+  match list with
+  | [] -> print_string "\n"
+  | Node(h, _, _)::t -> print_string h; print_list t
+
+(** [insert_char key trie] inserts a node with key [key], an empty list of 
+    children, and a false isLeaf parameter into a trie [trie].  If [trie] 
+    already contains a Node with the given [key], just returns the original 
+    [trie].
+
+    Requires: [key] must be a string representation of a single char 
+*)
+let insert_char key trie : t = 
+  match trie with 
+  | Node(c, list, b) ->
+    if contains_key key list then
+      trie
+    else
+      let new_list = (Node(key, [], false))::list in 
+      Node(c, new_list, b)
+
+(** [update_children t lst] is a trie [t] with its children tries 
+    replaced with [lst]
+*)
+let update_children t lst = 
   match t with
-  | Node(k, lst, _) -> Node (k, lst, true)
+  | Node (k, _, bool) -> Node (k, lst, bool)
+
+(** [insert_word key trie n full_length] inserts a word [key] into the given
+    [trie] where each char of the key is it's own node and the last char of the 
+    key is marked true to indicate it is the end of a word
+
+    Example: 
+    [insert_word "code" empty 0 4] will return a trie of the form
+    " ",false -> "c",false -> "o",false -> "d",false -> "e", true
+    where [->] indicates children
+
+    Requires:
+    -n input must be 0
+    -full_length must correspond to String.length key
+*)
+let rec insert_word key trie n full_length: t = 
+  match trie with
+  | Node(c, list, b) -> 
+    (* print_int n; print_string ("\nYet to be Inserted: "^key); print_string ("\nKey of current Node: "^c^"\nChildren: "); print_list list; print_endline "     "; *)
+    if n = full_length then (* when you're on the last letter of the word being inputted *)
+      Node(c, list, true)
+    else
+    if contains_key (Char.escaped key.[0]) list then (* if the key is already a child of the given node *)
+      let curr = get_key_node (Char.escaped key.[0]) list in 
+      update_children trie ((insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length)::(remove_key list (Char.escaped key.[0]) []))
+    else 
+      let new_node = (insert_char (Char.escaped key.[0]) trie) in 
+      insert_word key new_node n full_length
+
+
+
+
+let insert keylst trie : t = 
+  let rec ins keylst trie = 
+    match keylst with
+    | k::t -> ins t (insert_word k trie 0 (String.length k))
+    | [] -> trie
+  in
+
+  ins keylst trie
+
+
+
+let search key trie: bool = 
+  let full_length = String.length key in 
+  let rec search_help key trie n= 
+    let length = String.length key in 
+    match trie, length with 
+    | Node(c, list, b), length -> 
+      if n = full_length then 
+        if b = true then true else false
+      else
+      if contains_key (Char.escaped key.[0]) list then
+        let curr = get_key_node (Char.escaped key.[0]) list in 
+        search_help (String.sub key 1 (full_length - (n+1))) curr (n+1) else false
+
+  in 
+
+  search_help key trie 0
+
+
+
+
+
+
+
+
+
+
 
 (* * [insert_word t lst] is a trie [t] with the word represented by [lst] 
-    inserted. 
-    Requires: 
-    [lst] is a character list of the word ( "ace" -> ['a';'c';'e'] 
+   inserted. 
+   Requires: 
+   [lst] is a character list of the word ( "ace" -> ['a';'c';'e'] 
 *)
 
 
@@ -110,99 +217,16 @@ let make_true t =
 (* | [] -> trie  *)
 (* with last node changed to true *)
 
-
-
-
-
-
-let rec contains_key key nodelist = 
-  match nodelist with
-  | Node(c, _, _)::t -> 
-    if key = c then true else contains_key key t
-  | [] -> false
-
-let rec get_key_node key nodelist = 
-  match nodelist with
-  | Node(c, l, b)::t ->
-    if key = c then Node(c, l, b) else get_key_node key t
-  | [] -> failwith "this key does not exist in this list"
-
-let check_bool_matching node bool=
-  match node with
-  |Node(_, _, b) -> if b = bool then true else false
-
-(** TODO DOCUMENT BETTER
-    remove the node with the given key from the nodelist
-*)
-let rec remove_key nodelist key acc=
-  match nodelist with
-  | Node(c, l, b)::t ->
-    if key = c then remove_key t key acc  else remove_key t key (Node(c,l,b)::acc)
-  | [] -> acc
-
-
-
-
-
-
-
-let insert key trie : t = 
-  failwith "unimplemented"
-
-
-
-let search key trie: bool = 
-  let full_length = String.length key in 
-  let rec search_help key trie n= 
-    let length = String.length key in 
-    match trie, length with 
-    | Node(c, list, b), length -> 
-      if n = full_length then 
-        if b = true then true else false
-      else
-      if contains_key (Char.escaped key.[0]) list then
-        let curr = get_key_node (Char.escaped key.[0]) list in 
-        search_help (String.sub key 1 (full_length - (n+1))) curr (n+1) else false
-
-  in 
-
-  search_help key trie 0
-
-let rec print_list list = 
-  match list with
-  | [] -> print_string "\n"
-  | Node(h, _, _)::t -> print_string h; print_list t
-
-(** requires the key to be a string representation of a single char *)
-let insert_char key trie : t = 
-  match trie with 
-  | Node(c, list, b) ->
-    if contains_key key list then
-      trie
-    else
-      let new_list = (Node(key, [], false))::list in 
-      Node(c, new_list, b)
-
-(** [update_children t lst] is a trie [t] with its children tries 
-    replaced with [lst]
-*)
-let update_children t lst = 
-  match t with
-  | Node (k, _, bool) -> Node (k, lst, bool)
-
-let rec insert_word key trie n full_length: t = 
-  match trie with
-  | Node(c, list, b) -> 
-    (* print_int n; print_string ("\nYet to be Inserted: "^key); print_string ("\nKey of current Node: "^c^"\nChildren: "); print_list list; print_endline "     "; *)
-    if n = full_length then (* when you're on the last letter of the word being inputted *)
-      Node(c, list, true)
-    else
-    if contains_key (Char.escaped key.[0]) list then (* if the key is already a child of the given node *)
-      let curr = get_key_node (Char.escaped key.[0]) list in 
-      update_children trie ((insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length)::(remove_key list (Char.escaped key.[0]) []))
-    else 
-      let new_node = (insert_char (Char.escaped key.[0]) trie) in 
-      insert_word key new_node n full_length
+(* (** [find_subtrie lst c] is a trie [t] with a key value [c] from the list of
+    tries [lst] *)
+   let rec find_subtrie lst c = 
+   match lst with
+   | h::t -> begin 
+      match h with
+      | Node (k, _, _) -> 
+        if k = c then h else find_subtrie t c
+    end
+   | [] -> failwith "c is not in lst" *)
 
 
 

@@ -4,26 +4,20 @@
 
 type key = string
 
-(** TODO DOCUMENT BETTER
-    abstract type of a node in a trie
-*)
+(** Abstract type of a node in a trie *)
 type t
 
-(** TODO DOCUMENT BETTER
-    an empty trie
-*)
+(** [empty] creates an empty trie *)
 val empty : t
 
-(** TODO DOCUMENT BETTER
-    tests if a trie is empty
-*)
+(** [is_empty trie] returns true if the [trie] is empty and false otherwise *)
 val is_empty: t -> bool
 
 (** TODO DOCUMENT BETTER
-    takes in a key and a trie and returns a new trie with the key added
-    or if the key is already there just returns the same trie
+    takes in a key list and a trie and returns a new trie with all the keys added
+    or if the keys are already there just returns the same trie
 *)
-val insert : key -> t -> t
+val insert : key list -> t -> t
 
 (** TODO DOCUMENT BETTER
     returns whether a given key is present in a trie
