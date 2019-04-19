@@ -228,4 +228,8 @@ let search key trie: bool =
    | [] -> failwith "c is not in lst" *)
 
 
-
+(** [valid_english word] is [true] if [word] is a valid English word
+    i.e. included in the text file "dictionary.txt" provided in the directory *)
+let valid_english word = 
+  let trie = insert (words "dictionary.txt") empty in 
+  search word trie

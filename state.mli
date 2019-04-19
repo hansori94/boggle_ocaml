@@ -12,6 +12,9 @@ exception Duplicate
 (** Raised if word less than three characters is encountered. *)
 exception TooShort
 
+exception NotBoard
+exception NotEnglish
+
 (** [init_player] returns a new player with default starting values *)
 val init_player : player
 
@@ -38,6 +41,6 @@ val update_state : player -> string -> player
     [board], i.e. it is a real word and it can successfully be made on this
     board
 *)
-val check_valid_word : player -> string -> string
+val check_valid_word : player -> string -> Board.board -> string
 
 

@@ -3,6 +3,8 @@ open Board
 exception Duplicate
 exception TooShort
 
+exception NotBoard
+exception NotEnglish
 type player = {
   init_time: float;
   found_words: string list;
@@ -59,10 +61,16 @@ let update_state player word =
                            } in 
     new_player_state
 
-let check_valid_word player str = 
+
+
+let check_valid_word player str board = 
   if (String.length str < 3) then raise (TooShort) else
   if (List.mem str (get_words_found player)) then raise (Duplicate) else
-    str
+  if not (Board.valid_string str board) then raise (NotBoard) else
+    (* TODO: Trie functor *)
+  if not (Trie.valid_english str) then raise (NotEnglish) 
+  else str
+
 
 (* let str_list = Board.get_all_words board in 
    List.mem str str_list *)

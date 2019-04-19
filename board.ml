@@ -1,6 +1,8 @@
 
 type board = (char array) array
 
+
+
 let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
                 'p';'q';'r';'s';'t';'u';'v';'w';'x';'y';'z']
 
@@ -73,6 +75,8 @@ let make_board m n : board =
 
   arr
 
+
+
 let print_board (board:board) : unit=
   let board_format = 
     Char.escaped board.(0).(0) ^ "  " ^ 
@@ -96,10 +100,6 @@ let print_board (board:board) : unit=
     ANSITerminal.(print_string [cyan; Bold] board_format);
   end
 
-(** [isWord word] checks if [word] is a real word in the dictionary
-    //////not fully implemented/////// *)
-let isWord (word:string) : bool = 
-  true
 (* 
 let rec get_all_words (board: board) (visited: (bool array) array) (i:int)
     (j:int) (str:string) (acc: string list) : string list =  *)
@@ -113,3 +113,15 @@ let rec get_all_words board =
    for col = j-1 to j+1 do
     if col<=4 then
     get_words_util board visited row col str acc *)
+
+
+(** [valid_string word board] is [true] if [word] is a valid string
+    from [board] and [false] otherwise.
+*)
+let rec valid_string word board = 
+  (* TODO *)
+  true
+
+
+
+

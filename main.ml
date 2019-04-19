@@ -1,6 +1,7 @@
 open Board
 open Parse
 open State
+open Trie
 
 (** raised if game timer runs out *)
 exception TimeOut
@@ -54,7 +55,7 @@ let rec start_game input state =
         | Word(word) -> begin
             let w = List.hd word in
             try (play_game board (State.update_state (state) 
-                                    (State.check_valid_word state w)))
+                                    (State.check_valid_word state w board)))
             with
             | TooShort ->
               ANSITerminal.(print_string [magenta; Bold] "Your word is too short. \
@@ -65,6 +66,17 @@ let rec start_game input state =
             | Duplicate -> 
               ANSITerminal.(print_string [magenta; Bold] "You already found this \
                                                           word. \
+                                                          Try another word!\n\n");
+              play_game board state
+
+            | NotBoard -> 
+              ANSITerminal.(print_string [magenta; Bold] "You can't form that word \
+                                                          with the current board. \
+                                                          Try another word!\n\n");
+              play_game board state
+            | NotEnglish -> 
+              ANSITerminal.(print_string [magenta; Bold] "This is not a valid \
+                                                          English word. \
                                                           Try another word!\n\n");
               play_game board state
           end
@@ -154,6 +166,7 @@ let main () =
   ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing, \n\
                                         or type 'quit game' to exit!\n");
   print_string "> ";
+  (* let example_trie = insert (words "dictionary.txt") empty *)
   match read_line () with
   | input -> start_game input State.init_player
   | exception End_of_file -> 

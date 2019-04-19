@@ -6,6 +6,7 @@
 (** The type of a game board *)
 type board = (char array) array
 
+
 (** [make_board m n] makes a random boggle board of size mxn 
     (right now only supports 4x4, using the traditional 16 boggle dice
     so each char value is not fully random but one of 6 possible values to 
@@ -22,3 +23,6 @@ val get_all_words : board -> string list
 (** [print_board board] prints to the screen the [board] in the style of boggle,
     consisting of 4 rows and 4 columns with spaces between each char *)
 val print_board : board -> unit
+
+
+val valid_string : string -> board -> bool
