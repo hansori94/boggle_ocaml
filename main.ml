@@ -138,9 +138,10 @@ let rec start_game input state =
 
 let main () = 
   ANSITerminal.(print_string [magenta; Bold] "\nWelcome to Boggle!\n");
-  (* TODO: Write Instructions *)
+  let board = Board.make_board 4 4 in
+  Board.print_board board;
   ANSITerminal.(print_string [yellow] 
-                  "\nForm words by stringing together adjacent characters in \
+                  "Form words by stringing together adjacent characters in \
                    any direction.\n\
                    How to Play:\n\
                    1. Words only count once.\n\
