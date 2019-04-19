@@ -4,7 +4,7 @@ type words = string list
 type input = 
   | Quit
   | Word of words
-  | Start
+  | Start of words
   | Shake
 
 exception Empty
@@ -28,7 +28,8 @@ let parse str =
   if (List.length strings = 2) then begin
     match strings with
     | h::t::[] when h = "quit" && t = "game" -> Quit
-    | h::t::[] when h = "start" && t = "game" -> Start
+    | h::t::[] when h = "start" && t = "boggle" -> Start(["small"])
+    | h::t::t2::[] when h = "start" && t="big" && t2="boggle" -> Start(["big"])
     | h::t::[] when h = "shake" && t = "it" -> Shake
     | _ -> raise (Malformed)
   end

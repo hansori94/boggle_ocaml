@@ -13,7 +13,7 @@ type words = string list
 type input = 
   | Quit
   | Word of words
-  | Start
+  | Start of words
   | Shake
 
 (** Raised if empty input is encountered. *)
@@ -22,7 +22,8 @@ exception Empty
 (** Raised if malformed input is encountered. *)
 exception Malformed
 
-(** [parse str] parses a player's input into a [input], as follows. The first
+(** UPDATE START DOCUMENTATION 
+    [parse str] parses a player's input into a [input], as follows. The first
     word (i.e., consecutive sequence of non-space characters) of [str] becomes 
     the verb. The next word if any, become the object phrase.
     Examples: 

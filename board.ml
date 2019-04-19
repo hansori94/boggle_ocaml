@@ -21,28 +21,30 @@ let die13 = ['e';'e';'g';'h';'n';'w']
 let die14 = ['a';'f';'f';'k';'p';'s']
 let die15 = ['h';'l';'n';'n';'r';'z']
 let die16 = ['d';'e';'i';'l';'r';'x']
+let dieArray = [|die1;die2;die3;die4;die5;die6;die7;die8;
+                 die9;die10;die11;die12;die13;die14;die15;die16|]
 
 (** array in which to hold our dice *)
 let dicearray = Array.make_matrix 4 4 []
 
 (** filled array of dice *)
-let dice = 
-  dicearray.(0).(0) <- die1;
-  dicearray.(0).(1) <- die2;
-  dicearray.(0).(2) <- die3;
-  dicearray.(0).(3) <- die4;
-  dicearray.(1).(0) <- die5;
-  dicearray.(1).(1) <- die6;
-  dicearray.(1).(2) <- die7;
-  dicearray.(1).(3) <- die8;
-  dicearray.(2).(0) <- die9;
-  dicearray.(2).(1) <- die10;
-  dicearray.(2).(2) <- die11;
-  dicearray.(2).(3) <- die12;
-  dicearray.(3).(0) <- die13;
-  dicearray.(3).(1) <- die14;
-  dicearray.(3).(2) <- die15;
-  dicearray.(3).(3) <- die16;
+let dice darr = 
+  dicearray.(0).(0) <- darr.(0);
+  dicearray.(0).(1) <- darr.(1);
+  dicearray.(0).(2) <- darr.(2);
+  dicearray.(0).(3) <- darr.(3);
+  dicearray.(1).(0) <- darr.(4);
+  dicearray.(1).(1) <- darr.(5);
+  dicearray.(1).(2) <- darr.(6);
+  dicearray.(1).(3) <- darr.(7);
+  dicearray.(2).(0) <- darr.(8);
+  dicearray.(2).(1) <- darr.(9);
+  dicearray.(2).(2) <- darr.(10);
+  dicearray.(2).(3) <- darr.(11);
+  dicearray.(3).(0) <- darr.(12);
+  dicearray.(3).(1) <- darr.(13);
+  dicearray.(3).(2) <- darr.(14);
+  dicearray.(3).(3) <- darr.(15);
   dicearray
 
 
@@ -60,12 +62,12 @@ let random_letter str : char =
     | [] -> failwith "random letter chooser error" in 
   get_char str
 
-let make_board m n : board = 
+let make_board m n die: board = 
   let arr = Array.make_matrix m n ' ' in
   let edit_arr arr = 
     for x=0 to m-1 do 
       for y=0 to n-1 do
-        arr.(x).(y) <- random_letter dice.(x).(y)
+        arr.(x).(y) <- random_letter (dice die).(x).(y)
       done
     done in 
 
@@ -113,3 +115,4 @@ let rec get_all_words board =
    for col = j-1 to j+1 do
     if col<=4 then
     get_words_util board visited row col str acc *)
+

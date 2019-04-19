@@ -166,6 +166,11 @@ let search key trie: bool =
 
   search_help key trie 0
 
+(* let rec search_list keylst trie acc=
+   match keylst with
+   | h::t -> search_list t trie (search h trie)
+   | [] -> acc *)
+
 
 
 
