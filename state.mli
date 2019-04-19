@@ -37,9 +37,12 @@ val print_words : player -> unit
     the initial [player] state *)
 val update_state : player -> string -> player
 
-(** UPDATED DOCUMENTATION [check_valid_word word board] checks if [word] is a valid word on the given
-    [board], i.e. it is a real word and it can successfully be made on this
-    board
+(** [check_valid_word word board] is [word] iff it is a "valid" word. 
+    Raises:
+    - TooShort: [word] is shorter than length 3
+    - Duplicate: [word] is already in [player.found_words]
+    - NotBoard: [word] cannot be successfully be made on [board]
+    - NotEnglish: [word] is not a valid English word
 *)
 val check_valid_word : player -> string -> Board.board -> string
 

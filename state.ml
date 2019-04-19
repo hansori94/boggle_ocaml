@@ -1,4 +1,5 @@
 open Board
+open Trie
 
 exception Duplicate
 exception TooShort
