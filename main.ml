@@ -47,7 +47,8 @@ let rec start_game input state trie =
         State.print_score state;
         print_time (Unix.getitimer timer);
         State.print_words state;
-
+        ANSITerminal.(print_string [magenta] "------------------\
+                                              -------------------\n");
         ANSITerminal.(print_string [magenta] "Type a word: \n> ");
         let input = read_line () in
         match Parse.parse input with
