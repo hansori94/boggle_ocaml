@@ -44,6 +44,6 @@ val update_state : player -> string -> player
     - NotBoard: [word] cannot be successfully be made on [board]
     - NotEnglish: [word] is not a valid English word
 *)
-val check_valid_word : player -> string -> Board.board -> string
+val check_valid_word : player -> string -> Board.board -> Trie.t -> string
 
 

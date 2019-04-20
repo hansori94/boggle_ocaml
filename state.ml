@@ -64,12 +64,12 @@ let update_state player word =
 
 
 
-let check_valid_word player str board = 
+let check_valid_word player str board trie = 
   if (String.length str < 3) then raise (TooShort) else
   if (List.mem str (get_words_found player)) then raise (Duplicate) else
   if not (Board.valid_string str board) then raise (NotBoard) else
     (* TODO: Trie functor *)
-  if not (Trie.valid_english str) then raise (NotEnglish) 
+  if not (Trie.valid_english str trie) then raise (NotEnglish) 
   else str
 
 

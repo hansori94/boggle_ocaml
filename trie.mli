@@ -31,4 +31,4 @@ val search : key -> t -> bool
 
 
 
-val valid_english : string ->  bool
+val valid_english : string -> t-> bool
