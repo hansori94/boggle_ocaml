@@ -37,6 +37,6 @@ clean:
 	rm -rf doc.public doc.private boggle_src.zip 
 
 zip:
-	zip boggle_src.zip *.ml* _tags Makefile dictionary.txt
+	zip boggle_src.zip *.ml* _tags Makefile dictionary.txt example.txt
 
 	

@@ -28,3 +28,7 @@ val insert : key list -> t -> t
     string [key] is not in the trie.
 *)
 val search : key -> t -> bool
+
+
+
+val valid_english : string -> t-> bool

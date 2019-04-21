@@ -1,6 +1,7 @@
 open Board
 open Parse
 open State
+open Trie
 
 (** raised if game timer runs out *)
 exception TimeOut
@@ -24,7 +25,7 @@ let print_time (status: Unix.interval_timer_status) =
                                     "^(string_of_int timeleft)^" seconds\n"))
 
 (** [start_game input] plays the game *)
-let rec start_game input state = 
+let rec start_game input state trie = 
   match Parse.parse input with
   | Quit -> 
     ANSITerminal.(print_string [magenta;Bold] "Quitting the game... Goodbye!\n");
@@ -45,34 +46,45 @@ let rec start_game input state =
     } in
 
     (** [play_game board state] plays the game with [board] and updates [state] *)
-    let rec play_game board state = 
+    let rec play_game board state trie = 
       try
         Sys.set_signal (-2) (Signal_handle timeout);
         Board.print_board board; print_endline " ";
         State.print_score state;
         print_time (Unix.getitimer timer);
         State.print_words state;
-        (* TODO:
-           1) Prints out player's current score and word list in State *)
+        ANSITerminal.(print_string [magenta] "------------------\
+                                              -------------------\n");
         ANSITerminal.(print_string [magenta] "Type a word: \n> ");
         let input = read_line () in
         match Parse.parse input with
         | Word(word) -> begin
             let w = List.hd word in
             try (play_game board (State.update_state (state) 
-                                    (State.check_valid_word state w)))
+                                    (State.check_valid_word state w board trie)) trie)
             with
             | TooShort ->
               ANSITerminal.(print_string [magenta; Bold] "Your word is too short. \
                                                           It must have at least \
                                                           3 letters...\
                                                           Try a longer word!\n\n");
-              play_game board state 
+              play_game board state trie
             | Duplicate -> 
               ANSITerminal.(print_string [magenta; Bold] "You already found this \
                                                           word. \
                                                           Try another word!\n\n");
-              play_game board state
+              play_game board state trie
+
+            | NotBoard -> 
+              ANSITerminal.(print_string [magenta; Bold] "You can't form that word \
+                                                          with the current board. \
+                                                          Try another word!\n\n");
+              play_game board state trie
+            | NotEnglish -> 
+              ANSITerminal.(print_string [magenta; Bold] "This is not a valid \
+                                                          English word. \
+                                                          Try another word!\n\n");
+              play_game board state trie
           end
 
         | Quit -> 
@@ -88,7 +100,7 @@ let rec start_game input state =
             match String.lowercase_ascii input with 
             | "y" -> 
               ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
-              start_game "start game" state
+              start_game "start game" state trie
             | "n" -> ANSITerminal.(print_string [magenta; Bold] "Goodbye! \n");
             | _ -> ANSITerminal.(print_string [magenta] "Wrong input. Please type \
                                                          (y/n): \n> ");
@@ -97,14 +109,14 @@ let rec start_game input state =
 
           help input
         | Shake -> ANSITerminal.(print_string [blue; Bold] "Commencing shake!\n\n"); 
-          start_game "start game" State.init_player 
+          start_game "start game" State.init_player trie
 
         | exception Empty ->
           ANSITerminal.(print_string [magenta;Bold] "You didn't type anything.\n\n"); 
-          play_game board state 
+          play_game board state trie
         | exception Malformed -> 
           ANSITerminal.(print_string [magenta;Bold] "Bad input.\n\n");
-          play_game board state 
+          play_game board state trie
         | _ -> ()
       with 
         TimeOut -> 
@@ -116,26 +128,26 @@ let rec start_game input state =
         ANSITerminal.(print_string [magenta; Bold] "\nType 'start game' to start \
                                                     a new game!\n");
         print_string "> ";
-        start_game (read_line ()) State.init_player
+        start_game (read_line ()) State.init_player trie
     in 
     timer_helper (Unix.setitimer timer timer_starter);
-    play_game board state
+    play_game board state trie
   | exception Empty -> 
     ANSITerminal.(print_string [magenta;] "You didn't type anything. \
                                            Type 'start game' to start \
                                            playing!\n"); 
     print_string "> ";
-    start_game (read_line()) state
+    start_game (read_line()) state trie
   | exception Malformed -> 
     ANSITerminal.(print_string [magenta] "Your instruction was badly formed. \
                                           Type 'start game' to start playing!\n"); 
     print_string "> ";
-    start_game (read_line()) state
+    start_game (read_line()) state trie
   | _ -> 
     ANSITerminal.(print_string [magenta] "Wrong input. Type \
                                           'start game' to start playing!\n");
     print_string "> ";
-    start_game (read_line()) state
+    start_game (read_line()) state trie
 
 
 
@@ -160,8 +172,10 @@ let main () =
   ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing, \n\
                                         or type 'quit game' to exit!\n");
   print_string "> ";
+  let trie = insert (words "dictionary.txt") empty in
   match read_line () with
-  | input -> start_game input State.init_player
+  | input -> 
+    start_game input State.init_player trie
   | exception End_of_file -> 
     ANSITerminal.(print_string [magenta] "\nGoodbye!\n"); ()
 

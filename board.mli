@@ -23,3 +23,6 @@ val get_all_words : board -> string list
 (** [print_board board] prints to the screen the [board] in the style of boggle,
     consisting of 4 rows and 4 columns with spaces between each char *)
 val print_board : board -> unit
+
+
+val valid_string : string -> board -> bool
