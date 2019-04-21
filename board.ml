@@ -4,7 +4,7 @@ type board = (char array) array
 let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
                 'p';'q';'r';'s';'t';'u';'v';'w';'x';'y';'z']
 
-(** first set of boggle dice *)
+(** 4x4 set of boggle dice *)
 let die1 = ['a';'a';'e';'e';'g';'n'] 
 let die2 = ['e';'l';'r';'t';'t';'y']
 let die3 = ['a';'o';'o';'t';'t';'w']
@@ -23,6 +23,11 @@ let die15 = ['h';'l';'n';'n';'r';'z']
 let die16 = ['d';'e';'i';'l';'r';'x']
 let dieArray = [|die1;die2;die3;die4;die5;die6;die7;die8;
                  die9;die10;die11;die12;die13;die14;die15;die16|]
+
+(* 5x5 set of boggle dice *)
+let b1 = ['a';'a';'a';'f';'r';'s']
+
+
 
 (** array in which to hold our dice *)
 let dicearray = Array.make_matrix 4 4 []
@@ -62,7 +67,12 @@ let random_letter str : char =
     | [] -> failwith "random letter chooser error" in 
   get_char str
 
-let make_board m n die: board = 
+let make_board m n: board = 
+  let choose_die m =
+    if m = 4 then dieArray
+    else bigDieArray
+  in
+  let die = choose_die m in
   let arr = Array.make_matrix m n ' ' in
   let edit_arr arr = 
     for x=0 to m-1 do 

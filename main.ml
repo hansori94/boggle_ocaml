@@ -29,8 +29,14 @@ let rec start_game input state =
   | Quit -> 
     ANSITerminal.(print_string [magenta;Bold] "Quitting the game... Goodbye!\n");
     ()
-  | Start -> 
-    let board = Board.make_board 4 4 in
+  | Start(size) -> 
+    let create_board size = 
+      if size = ["small"] then 
+        Board.make_board 4 4 
+      else Board.make_board 5 5
+    in
+
+    let board = create_board size in
     (* let state = State.init_player in *)
     let timer = Unix.ITIMER_REAL in 
     let (timer_starter: Unix.interval_timer_status) = {
