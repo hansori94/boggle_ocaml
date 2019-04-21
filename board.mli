@@ -6,11 +6,11 @@
 (** The type of a game board *)
 type board = (char array) array
 
-(** UPDATE SIZE DOCUMENTAITON
-    [make_board m n] makes a random boggle board of size mxn 
-    (right now only supports 4x4, using the traditional 16 boggle dice
-    so each char value is not fully random but one of 6 possible values to 
-    increase playability)
+(** [make_board m n] makes a random boggle board of size mxn 
+
+    Requires: 
+    -m = n
+    -m = 4 or 5
 *)
 val make_board : int -> int -> board
 

@@ -47,7 +47,10 @@ let bar4 = fun () -> parse "start   game now "
 let word1 = Word["hello"]
 
 let quit = Quit
-let start = Start
+let starts = Start["small"]
+let startb = Start["big"]
+let shake = Shake
+
 
 let parse_tests = [
   "parse empty" >:: (fun _ -> assert_raises Empty bar1);
@@ -62,9 +65,11 @@ let parse_tests = [
   "parse quit game" >:: (fun _ -> assert_equal quit (parse "quit game"));
   "parse quit game with spaces" >:: 
   (fun _ -> assert_equal quit (parse "  quit     game  "));
-  "parse start game" >:: (fun _ -> assert_equal start (parse "start game"));
+  "parse start game" >:: (fun _ -> assert_equal starts (parse "start boggle"));
   "parse start game with spaces" >:: 
-  (fun _ -> assert_equal start (parse "  start     game  "));
+  (fun _ -> assert_equal startb (parse "  start   big  boggle  "));
+  "parse shake" >:: 
+  (fun _ -> assert_equal shake (parse "    shake it "));
 ]
 
 let h_trie = insert ["h"] empty

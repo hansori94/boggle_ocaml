@@ -27,33 +27,86 @@ let dieArray = [|die1;die2;die3;die4;die5;die6;die7;die8;
                  die9;die10;die11;die12;die13;die14;die15;die16|]
 
 (* 5x5 set of boggle dice *)
-let b1 = ['a';'a';'a';'f';'r';'s']
+let b1 = ['q';'b';'z';'j';'x';'k']
+let b2 = ['t';'o';'u';'o';'t';'o']
+let b3 = ['o';'v';'w';'r';'g';'r']
+let b4 = ['a';'a';'a';'f';'r';'s']
+let b5 = ['a';'u';'m';'e';'e';'g']
+let b6 = ['h';'h';'l';'r';'d';'o']
+let b7 = ['n';'h';'d';'t';'h';'o']
+let b8 = ['l';'h';'n';'r';'o';'d']
+let b9 = ['a';'f';'a';'i';'s';'r']
+let b10 = ['y';'i';'f';'a';'s';'r']
+let b11 = ['t';'e';'l';'p';'c';'i']
+let b12 = ['s';'s';'n';'s';'e';'u']
+let b13 = ['r';'i';'y';'p';'r';'h']
+let b14 = ['d';'o';'r';'d';'l';'n']
+let b15 = ['c';'c';'w';'n';'s';'t']
+let b16 = ['t';'t';'o';'t';'e';'m']
+let b17 = ['s';'c';'t';'i';'e';'p']
+let b18 = ['e';'a';'n';'d';'n';'n']
+let b19 = ['m';'n';'n';'e';'a';'g']
+let b20 = ['u';'o';'t';'o';'w';'n']
+let b21 = ['a';'e';'a';'e';'e';'e']
+let b22 = ['y';'i';'f';'p';'s';'r']
+let b23 = ['e';'e';'e';'e';'m';'a']
+let b24 = ['i';'t';'i';'t';'i';'e']
+let b25 = ['e';'t';'i';'l';'i';'c']
+let bigDieArray = [|b1;b2;b3;b4;b5;b6;b7;b8;b9;b10;b11;b12;b13;
+                    b14;b15;b16;b17;b18;b19;b20;b21;b22;b23;b24;b25|]
 
 
 
 (** array in which to hold our dice *)
 let dicearray = Array.make_matrix 4 4 []
-
-(** filled array of dice *)
-let dice darr = 
-  dicearray.(0).(0) <- darr.(0);
-  dicearray.(0).(1) <- darr.(1);
-  dicearray.(0).(2) <- darr.(2);
-  dicearray.(0).(3) <- darr.(3);
-  dicearray.(1).(0) <- darr.(4);
-  dicearray.(1).(1) <- darr.(5);
-  dicearray.(1).(2) <- darr.(6);
-  dicearray.(1).(3) <- darr.(7);
-  dicearray.(2).(0) <- darr.(8);
-  dicearray.(2).(1) <- darr.(9);
-  dicearray.(2).(2) <- darr.(10);
-  dicearray.(2).(3) <- darr.(11);
-  dicearray.(3).(0) <- darr.(12);
-  dicearray.(3).(1) <- darr.(13);
-  dicearray.(3).(2) <- darr.(14);
-  dicearray.(3).(3) <- darr.(15);
+(** filled array of 4x4 dice *)
+let dice = 
+  dicearray.(0).(0) <- dieArray.(0);
+  dicearray.(0).(1) <- dieArray.(1);
+  dicearray.(0).(2) <- dieArray.(2);
+  dicearray.(0).(3) <- dieArray.(3);
+  dicearray.(1).(0) <- dieArray.(4);
+  dicearray.(1).(1) <- dieArray.(5);
+  dicearray.(1).(2) <- dieArray.(6);
+  dicearray.(1).(3) <- dieArray.(7);
+  dicearray.(2).(0) <- dieArray.(8);
+  dicearray.(2).(1) <- dieArray.(9);
+  dicearray.(2).(2) <- dieArray.(10);
+  dicearray.(2).(3) <- dieArray.(11);
+  dicearray.(3).(0) <- dieArray.(12);
+  dicearray.(3).(1) <- dieArray.(13);
+  dicearray.(3).(2) <- dieArray.(14);
+  dicearray.(3).(3) <- dieArray.(15);
   dicearray
 
+let bigdicearray = Array.make_matrix 5 5 []
+let bigDice = 
+  bigdicearray.(0).(0) <- bigDieArray.(0);
+  bigdicearray.(0).(1) <- bigDieArray.(1);
+  bigdicearray.(0).(2) <- bigDieArray.(2);
+  bigdicearray.(0).(3) <- bigDieArray.(3);
+  bigdicearray.(0).(4) <- bigDieArray.(4);
+  bigdicearray.(1).(0) <- bigDieArray.(5);
+  bigdicearray.(1).(1) <- bigDieArray.(6);
+  bigdicearray.(1).(2) <- bigDieArray.(7);
+  bigdicearray.(1).(3) <- bigDieArray.(8);
+  bigdicearray.(1).(4) <- bigDieArray.(9);
+  bigdicearray.(2).(0) <- bigDieArray.(10);
+  bigdicearray.(2).(1) <- bigDieArray.(11);
+  bigdicearray.(2).(2) <- bigDieArray.(12);
+  bigdicearray.(2).(3) <- bigDieArray.(13);
+  bigdicearray.(2).(4) <- bigDieArray.(14);
+  bigdicearray.(3).(0) <- bigDieArray.(15);
+  bigdicearray.(3).(1) <- bigDieArray.(16);
+  bigdicearray.(3).(2) <- bigDieArray.(17);
+  bigdicearray.(3).(3) <- bigDieArray.(18);
+  bigdicearray.(3).(4) <- bigDieArray.(19);
+  bigdicearray.(4).(0) <- bigDieArray.(20);
+  bigdicearray.(4).(1) <- bigDieArray.(21);
+  bigdicearray.(4).(2) <- bigDieArray.(22);
+  bigdicearray.(4).(3) <- bigDieArray.(23);
+  bigdicearray.(4).(4) <- bigDieArray.(24);
+  bigdicearray
 
 
 (** [random_letter list] takes in a char list [list] and returns a randomly 
@@ -71,15 +124,15 @@ let random_letter str : char =
 
 let make_board m n: board = 
   let choose_die m =
-    if m = 4 then dieArray
-    else bigDieArray
+    if m = 4 then dicearray
+    else bigdicearray
   in
   let die = choose_die m in
   let arr = Array.make_matrix m n ' ' in
   let edit_arr arr = 
     for x=0 to m-1 do 
       for y=0 to n-1 do
-        arr.(x).(y) <- random_letter (dice die).(x).(y)
+        arr.(x).(y) <- random_letter die.(x).(y)
       done
     done in 
 
@@ -91,22 +144,51 @@ let make_board m n: board =
 
 let print_board (board:board) : unit=
   let board_format = 
-    Char.escaped board.(0).(0) ^ "  " ^ 
-    Char.escaped board.(0).(1) ^ "  " ^ 
-    Char.escaped board.(0).(2) ^ "  " ^ 
-    Char.escaped board.(0).(3) ^ "\n" ^
-    Char.escaped board.(1).(0) ^ "  " ^ 
-    Char.escaped board.(1).(1) ^ "  " ^ 
-    Char.escaped board.(1).(2) ^ "  " ^ 
-    Char.escaped board.(1).(3) ^ "\n" ^ 
-    Char.escaped board.(2).(0) ^ "  " ^ 
-    Char.escaped board.(2).(1) ^ "  " ^ 
-    Char.escaped board.(2).(2) ^ "  " ^ 
-    Char.escaped board.(2).(3) ^ "\n" ^
-    Char.escaped board.(3).(0) ^ "  " ^ 
-    Char.escaped board.(3).(1) ^ "  " ^ 
-    Char.escaped board.(3).(2) ^ "  " ^ 
-    Char.escaped board.(3).(3) ^ "\n" in 
+    if Array.length board = 4 then 
+      Char.escaped board.(0).(0) ^ "  " ^ 
+      Char.escaped board.(0).(1) ^ "  " ^ 
+      Char.escaped board.(0).(2) ^ "  " ^ 
+      Char.escaped board.(0).(3) ^ "\n" ^
+      Char.escaped board.(1).(0) ^ "  " ^ 
+      Char.escaped board.(1).(1) ^ "  " ^ 
+      Char.escaped board.(1).(2) ^ "  " ^ 
+      Char.escaped board.(1).(3) ^ "\n" ^ 
+      Char.escaped board.(2).(0) ^ "  " ^ 
+      Char.escaped board.(2).(1) ^ "  " ^ 
+      Char.escaped board.(2).(2) ^ "  " ^ 
+      Char.escaped board.(2).(3) ^ "\n" ^
+      Char.escaped board.(3).(0) ^ "  " ^ 
+      Char.escaped board.(3).(1) ^ "  " ^ 
+      Char.escaped board.(3).(2) ^ "  " ^ 
+      Char.escaped board.(3).(3) ^ "\n" 
+
+    else 
+      Char.escaped board.(0).(0) ^ "  " ^ 
+      Char.escaped board.(0).(1) ^ "  " ^ 
+      Char.escaped board.(0).(2) ^ "  " ^ 
+      Char.escaped board.(0).(3) ^ "  " ^
+      Char.escaped board.(0).(4) ^ "\n" ^
+      Char.escaped board.(1).(0) ^ "  " ^ 
+      Char.escaped board.(1).(1) ^ "  " ^ 
+      Char.escaped board.(1).(2) ^ "  " ^ 
+      Char.escaped board.(1).(3) ^ "  " ^ 
+      Char.escaped board.(1).(4) ^ "\n" ^
+      Char.escaped board.(2).(0) ^ "  " ^ 
+      Char.escaped board.(2).(1) ^ "  " ^ 
+      Char.escaped board.(2).(2) ^ "  " ^ 
+      Char.escaped board.(2).(3) ^ "  " ^
+      Char.escaped board.(2).(4) ^ "\n" ^
+      Char.escaped board.(3).(0) ^ "  " ^ 
+      Char.escaped board.(3).(1) ^ "  " ^ 
+      Char.escaped board.(3).(2) ^ "  " ^ 
+      Char.escaped board.(3).(3) ^ "  " ^
+      Char.escaped board.(3).(4) ^ "\n" ^
+      Char.escaped board.(4).(0) ^ "  " ^ 
+      Char.escaped board.(4).(1) ^ "  " ^ 
+      Char.escaped board.(4).(2) ^ "  " ^ 
+      Char.escaped board.(4).(3) ^ "  " ^
+      Char.escaped board.(4).(4)
+  in 
 
   begin
     ANSITerminal.(print_string [cyan; Bold] board_format);

@@ -90,26 +90,32 @@ let rec start_game input state trie =
         | Quit -> 
           ANSITerminal.(print_string [magenta] "Quitting the game...\n");
           ANSITerminal.(print_string [magenta] "Would you like to play another \
-                                                game? \
-                                                Type (y/n): \n> ");
+                                                game of big or small boggle? \
+                                                Type (big/small/no): \n> ");
           let input = read_line () in
 
           (** [help input] starts a new board or quits the game based on user 
               input (y,n) *)
           let rec help input = 
             match String.lowercase_ascii input with 
-            | "y" -> 
+            | "small" -> 
               ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
-              start_game "start game" state trie
-            | "n" -> ANSITerminal.(print_string [magenta; Bold] "Goodbye! \n");
+              start_game "start boggle" state trie
+            | "big" -> 
+              ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
+              start_game "start big boggle" state trie
+            | "no" -> ANSITerminal.(print_string [magenta; Bold] "Goodbye! \n");
             | _ -> ANSITerminal.(print_string [magenta] "Wrong input. Please type \
-                                                         (y/n): \n> ");
+                                                         (big/small/no): \n> ");
               help (read_line ())
           in 
 
           help input
         | Shake -> ANSITerminal.(print_string [blue; Bold] "Commencing shake!\n\n"); 
-          start_game "start game" State.init_player trie
+          if Array.length board = 4 then
+            start_game "start boggle" State.init_player trie
+          else
+            start_game "start big boggle" State.init_player trie
 
         | exception Empty ->
           ANSITerminal.(print_string [magenta;Bold] "You didn't type anything.\n\n"); 
@@ -125,7 +131,8 @@ let rec start_game input state trie =
         ANSITerminal.(print_string [red; Bold] "Time's Up!\n\n");
         ANSITerminal.(print_string [red] "Final ");
         State.print_score state;
-        ANSITerminal.(print_string [magenta; Bold] "\nType 'start game' to start \
+        ANSITerminal.(print_string [magenta; Bold] "\nType 'start boggle' or \
+                                                    'start big boggle' to start \
                                                     a new game!\n");
         print_string "> ";
         start_game (read_line ()) State.init_player trie
@@ -134,18 +141,21 @@ let rec start_game input state trie =
     play_game board state trie
   | exception Empty -> 
     ANSITerminal.(print_string [magenta;] "You didn't type anything. \
-                                           Type 'start game' to start \
+                                           Type 'start boggle' or 'start big \
+                                           boggle' to start \
                                            playing!\n"); 
     print_string "> ";
     start_game (read_line()) state trie
   | exception Malformed -> 
     ANSITerminal.(print_string [magenta] "Your instruction was badly formed. \
-                                          Type 'start game' to start playing!\n"); 
+                                          Type 'start boggle' or 'start big \
+                                          boggle' to start playing!\n"); 
     print_string "> ";
     start_game (read_line()) state trie
   | _ -> 
     ANSITerminal.(print_string [magenta] "Wrong input. Type \
-                                          'start game' to start playing!\n");
+                                          'start boggle' or 'start big boggle' \
+                                          to start playing!\n");
     print_string "> ";
     start_game (read_line()) state trie
 
@@ -160,7 +170,8 @@ let main () =
   Board.print_board board;
   ANSITerminal.(print_string [yellow] 
                   "Form words by stringing together adjacent characters in \
-                   any direction.\n\
+                   any direction. You can play normal Boggle with a 4x4 board \
+                   or Big Boggle with a 5x5 board!\n\
                    How to Play:\n\
                    1. Words only count once.\n\
                    2. Words must be at least 3 characters.\n\
@@ -169,7 +180,8 @@ let main () =
                    Have fun!");
   ANSITerminal.(print_string [blue;Bold] "\n...and type 'shake it' while playing \
                                           to reset the game with a new board!\n");       
-  ANSITerminal.(print_string [magenta] "\nType 'start game' to start playing, \n\
+  ANSITerminal.(print_string [magenta] "\nType 'start boggle' or 'start big boggle' \
+                                        to start playing, \n\
                                         or type 'quit game' to exit!\n");
   print_string "> ";
   let trie = insert (words "dictionary.txt") empty in

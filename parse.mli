@@ -22,14 +22,14 @@ exception Empty
 (** Raised if malformed input is encountered. *)
 exception Malformed
 
-(** UPDATE START DOCUMENTATION 
-    [parse str] parses a player's input into a [input], as follows. The first
+(** [parse str] parses a player's input into a [input], as follows. The first
     word (i.e., consecutive sequence of non-space characters) of [str] becomes 
     the verb. The next word if any, become the object phrase.
     Examples: 
     - [parse "    quit game   "] is [Quit]
     - [parse "Word word"] is [Word "word"]. 
-    - [parse "start game"] is [Start]
+    - [parse "start boggle"] is [Start "small"]
+      -[pase "start big boggle"] is [Start "big"]
     - [parse "shake it"] is [Shake]
 
     Requires: [str] contains only alphanumeric (A-Z, a-z, 0-9) and space 
@@ -38,11 +38,11 @@ exception Malformed
     Raises: [Empty] if [str] is the empty string or contains only spaces. 
 
     Raises: [Malformed] if the input is malformed. An input
-    is {i malformed} if the verb is neither "quit" nor "start",
+    is {i malformed} if the verb is neither "quit" nor "start" nor "shake",
     or if the verb is "quit" and there is an input besides "game",
-    or if the verb is "start" and there is an input besides "game",
+    or if the verb is "start" and there is an input besides "boggle" or "big boggle",
     or if the verb is "shake" and there is an input besides "it",
     or if there is an object phrase of more than one word with the verb not being
-    "quit" or "start"
+    "quit" or "start" or "shake"
 *)
 val parse : string -> input
