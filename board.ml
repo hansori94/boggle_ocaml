@@ -1,7 +1,6 @@
+open Trie
 
 type board = (char array) array
-
-
 
 let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
                 'p';'q';'r';'s';'t';'u';'v';'w';'x';'y';'z']
@@ -194,11 +193,91 @@ let print_board (board:board) : unit=
     ANSITerminal.(print_string [cyan; Bold] board_format);
   end
 
+let adjacency_array = 
+  let arr = Array.make 16 [] in 
+  arr.(0) <- [1;4;5];
+  arr.(1) <- [0;4;5;6;2];
+  arr.(2) <- [1;5;6;7;3];
+  arr.(3) <- [2;6;7];
+  arr.(4) <- [0;1;5;8;9];
+  arr.(5) <- [0;1;2;4;6;8;9;10];
+  arr.(6) <- [1;2;3;5;7;9;10;11];
+  arr.(7) <- [2;3;6;10;11];
+  arr.(8) <- [4;5;9;12;13];
+  arr.(9) <- [4;5;6;8;10;12;13;14];
+  arr.(10) <- [5;6;7;9;11;13;14;15];
+  arr.(11) <- [6;7;10;14;15];
+  arr.(12) <- [8;9;13];
+  arr.(13) <- [12;8;9;10;14];
+  arr.(14) <- [9;10;11;13;15];
+  arr.(15) <- [10;11;14];
+  arr
+
+let visited_array =
+  Array.make 16 false
+
+let get_char n board =
+  if n=0 then board.(0).(0) else
+  if n=1 then board.(0).(1) else
+  if n=2 then board.(0).(2) else
+  if n=3 then board.(0).(3) else
+  if n=4 then board.(1).(0) else
+  if n=5 then board.(1).(1) else
+  if n=6 then board.(1).(2) else
+  if n=7 then board.(1).(3) else
+  if n=8 then board.(2).(0) else
+  if n=9 then board.(2).(1) else
+  if n=10 then board.(2).(2) else
+  if n=11 then board.(2).(3) else
+  if n=12 then board.(3).(0) else
+  if n=13 then board.(3).(1) else
+  if n=14 then board.(3).(2) else
+    board.(3).(3)
+
+
+
+let rec get_all_words board = 
+  []
+
+let rec print_list list = 
+  match list with
+  | [] -> print_string "\n"
+  | h::t -> print_int h; print_list t
+
+let rec dfs char n board str trie acc : string list=
+  visited_array.(n) <- true;
+  let test_string = str^(Char.escaped (get_char n board)) in
+  let new_acc test_string acc = 
+    if String.length test_string > 3 then 
+      if String.length test_string > 4 then (* Trie.search test_string trie *)
+        test_string::acc
+      else 
+        acc
+    else acc in 
+  let ret_acc = new_acc test_string acc in 
+  let adjacent = adjacency_array.(n) in 
+  print_list adjacent;
+  let rec rec_call lst= 
+    match lst with
+    | h::t ->
+      if visited_array.(h) = false 
+      then dfs (get_char h board) h board test_string trie ret_acc else
+        rec_call t
+    | [] -> acc in  
+
+  rec_call adjacent
+
+
+
+
+
+
+
+
+
 (* 
 let rec get_all_words (board: board) (visited: (bool array) array) (i:int)
     (j:int) (str:string) (acc: string list) : string list =  *)
-let rec get_all_words board = 
-  []
 (* visited.(i).(j) <- true; 
    let word = str^Char.escaped(board.(i).(j)) in
    if isWord word then word::acc else 
