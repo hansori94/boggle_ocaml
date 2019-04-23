@@ -211,7 +211,7 @@ let print_board (board:board) : unit=
     ANSITerminal.(print_string [cyan; Bold] board_format);
   end
 
-(** Rules of which 'tiles' are adjacent to each other *)
+(** Rules of which 'tiles' are adjacent to each other for 4x4 board*)
 let adjacency_array = 
   let arr = Array.make 16 [] in 
   arr.(0) <- [1;4;5];
@@ -232,6 +232,7 @@ let adjacency_array =
   arr.(15) <- [10;11;14];
   arr
 
+(** Rules of which 'tiles' are adjacent to each other for 5x5 board *)
 let adjacency_array_big = 
   let arr = Array.make 25 [] in 
   arr.(0) <- [1;5;6];
@@ -261,7 +262,13 @@ let adjacency_array_big =
   arr.(24) <- [18;19;23];
   arr
 
-(** given a position, return character at that position *)
+(** [get_char n board] given a position [n] on a board, return the character at 
+    that position on [board]. 
+    Positions are numbered starting from 0 in the top left corner.
+
+    Requires: 
+    -board is either 4x4 or 5x5
+*)
 let get_char n board =
   if Array.length board = 4 then 
     if n=0 then board.(0).(0) else
@@ -307,7 +314,12 @@ let get_char n board =
   if n=23 then board.(4).(3) else
     board.(4).(4)
 
-(** given an index, get position *)
+(** [index_to_pos m (f,s)] given an index (f,s) on a board of size mxm,
+    get the corresponding position 
+    Requires:
+    -if m = 4 then index must be between (0,0)-(3,3)
+    -if m = 5 then index must be between (0,0)-(4,4)
+*)
 let index_to_pos m (f,s) = 
   if m = 4 then 
     match (f,s) with
@@ -358,7 +370,12 @@ let index_to_pos m (f,s) =
     | _ -> failwith "index_to_pos error5"
 
 
-(** given a position, get the index *)
+(** [pos_to_index m n] given a position n on a board of size mxm,
+    get the corresponding index 
+    Requires:
+    -if m = 4 then position must be between 0-15
+    -if m = 5 then position must be between 0-24
+*)
 let pos_to_index m n = 
   if m = 4 then 
     match n with
