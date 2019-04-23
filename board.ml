@@ -54,7 +54,7 @@ let bigDieArray = [|b1;b2;b3;b4;b5;b6;b7;b8;b9;b10;b11;b12;b13;
 
 
 
-(** array in which to hold our dice *)
+(** array in which to hold our 4x4 dice *)
 let dicearray = Array.make_matrix 4 4 []
 (** filled array of 4x4 dice *)
 let dice = 
@@ -76,7 +76,9 @@ let dice =
   dicearray.(3).(3) <- dieArray.(15);
   dicearray
 
+(** array in which to hold our 5x5 dice *)
 let bigdicearray = Array.make_matrix 5 5 []
+(** filled array of 5x5 dice *)
 let bigDice = 
   bigdicearray.(0).(0) <- bigDieArray.(0);
   bigdicearray.(0).(1) <- bigDieArray.(1);
@@ -105,9 +107,11 @@ let bigDice =
   bigdicearray.(4).(4) <- bigDieArray.(24);
   bigdicearray
 
+(** Hashtable for 4x4 board *)
 let lookup = 
   Hashtbl.create 16
 
+(** Hashtable for 5x5 board *)
 let lookupBig = 
   Hashtbl.create 25
 
@@ -125,8 +129,8 @@ let random_letter str : char =
     | [] -> failwith "random letter chooser error" in 
   get_char str
 
-let test = 
-  [|[|'a';'b';'c';'d'|];[|'e';'f';'g';'h'|];[|'i';'j';'k';'l'|];[|'m';'n';'o';'p'|]|]
+(* let test = 
+   [|[|'a';'b';'c';'d'|];[|'e';'f';'g';'h'|];[|'i';'j';'k';'l'|];[|'m';'n';'o';'p'|]|] *)
 
 let make_board m n: board = 
   let choose_die m =
@@ -144,7 +148,7 @@ let make_board m n: board =
     Hashtbl.clear hash;
     for x=0 to m-1 do 
       for y=0 to n-1 do
-        let c = random_letter die.(x).(y) in (*test.(x).(y)*)
+        let c = random_letter die.(x).(y) in 
         arr.(x).(y) <- c;
         Hashtbl.add hash c (x,y);
       done
@@ -208,6 +212,7 @@ let print_board (board:board) : unit=
     ANSITerminal.(print_string [cyan; Bold] board_format);
   end
 
+(** Rules of which 'tiles' are adjacent to each other *)
 let adjacency_array = 
   let arr = Array.make 16 [] in 
   arr.(0) <- [1;4;5];
@@ -257,6 +262,7 @@ let adjacency_array_big =
   arr.(24) <- [18;19;23];
   arr
 
+(** given a position, return character at that position *)
 let get_char n board =
   if Array.length board = 4 then 
     if n=0 then board.(0).(0) else
@@ -302,6 +308,7 @@ let get_char n board =
   if n=23 then board.(4).(3) else
     board.(4).(4)
 
+(** given an index, get position *)
 let index_to_pos m (f,s) = 
   if m = 4 then 
     match (f,s) with
@@ -351,6 +358,8 @@ let index_to_pos m (f,s) =
     | (4,4) -> 24
     | _ -> failwith "index_to_pos error5"
 
+
+(** given a position, get the index *)
 let pos_to_index m n = 
   if m = 4 then 
     match n with
@@ -401,41 +410,9 @@ let pos_to_index m n =
     | _ -> failwith "pos_to_index error5"
 
 
-
-
-let rec get_all_words board = 
-  []
-
-let rec print_list list = 
-  match list with
-  | [] -> print_string "\n"
-  | h::t -> print_int h; print_list t
-
-let rec print_string_list (list:string list) = 
-  match list with
-  | [] -> print_string "\n"
-  | h::t -> print_string (h^",  "); print_string_list t
-
-
-let rec print_char_list (list:char list) = 
-  match list with
-  | [] -> print_string "\n"
-  | h::t -> print_string ((Char.escaped h)^",  "); print_char_list t
-
-let rec print_tup_list list = 
-  match list with
-  | [] -> print_string "\n"
-  | (f,s)::t -> print_string "("; print_int f; print_string ", "; print_int s; print_string ")  "; print_tup_list t
-
-let rec cons_list list1 list2 = 
-  match list1 with
-  | h::t -> if List.mem h list2 then 
-      cons_list t list2
-    else 
-      cons_list t (h::list2)
-  | [] -> list2
-
-
+(** [remove_dup v a] removes the elements in list [a] that are present in 
+    list [v]
+*)
 let rec remove_dup visited adjacents acc= 
   match adjacents with 
   | h::t ->
@@ -463,6 +440,7 @@ let rec valid_string word board =
     false
   else 
     let index = Hashtbl.find_all hash l in (* gives us list of positions *)
+
     let rec check_word (string:string) board visited hash index: bool = 
 
       let rec visited_indices visited acc= 
@@ -470,7 +448,7 @@ let rec valid_string word board =
         | h::t -> visited_indices t ((pos_to_index (Array.length board) h)::acc)
         | [] -> acc in 
       let index = remove_dup (visited_indices visited []) index [] in 
-      print_tup_list index;
+
       let helper h = 
         let pos = index_to_pos (Array.length board) h in 
         let visited = pos::visited in

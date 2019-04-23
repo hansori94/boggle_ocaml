@@ -14,15 +14,9 @@ type board = (char array) array
 *)
 val make_board : int -> int -> board
 
-(** [get_all_words board] returns all real findable words on a given [board]
-    where real means exists in our dictionary and is not a proper noun, and 
-    findable means can be made from the given board following the rules of boggle
-*)
-val get_all_words : board -> string list
-
 (** [print_board board] prints to the screen the [board] in the style of boggle,
     consisting of 4 rows and 4 columns with spaces between each char *)
 val print_board : board -> unit
 
-
+(** TODO DOCUMENT *)
 val valid_string : string -> board -> bool
