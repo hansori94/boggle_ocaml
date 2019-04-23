@@ -7,21 +7,21 @@ let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
 
 (** 4x4 set of boggle dice *)
 let die1 = ['a';'a';'e';'e';'g';'n'] 
-let die2 = ['e';'l';'r';'t';'t';'y']
-let die3 = ['a';'o';'o';'t';'t';'w']
-let die4 = ['a';'b';'b';'j';'o';'o']
-let die5 = ['e';'h';'r';'t';'v';'w']
+let die14 = ['e';'l';'r';'t';'t';'y']
+let die5 = ['a';'o';'o';'t';'t';'w']
+let die2 = ['a';'b';'b';'j';'o';'o']
+let die12 = ['e';'h';'r';'t';'v';'w']
 let die6 = ['c';'i';'m';'o';'t';'u']
-let die7 = ['d';'i';'s';'t';'t';'y']
-let die8 = ['e';'i';'o';'s';'s';'t']
-let die9 = ['d';'e';'l';'r';'v';'y']
-let die10 = ['a';'c';'h';'o';'p';'s']
-let die11 = ['h';'i';'m';'n';'q';'u']
-let die12 = ['e';'e';'i';'n';'s';'u']
-let die13 = ['e';'e';'g';'h';'n';'w']
-let die14 = ['a';'f';'f';'k';'p';'s']
-let die15 = ['h';'l';'n';'n';'r';'z']
-let die16 = ['d';'e';'i';'l';'r';'x']
+let die9 = ['d';'i';'s';'t';'t';'y']
+let die13 = ['e';'i';'o';'s';'s';'t']
+let die8 = ['d';'e';'l';'r';'v';'y']
+let die3 = ['a';'c';'h';'o';'p';'s']
+let die15 = ['h';'i';'m';'n';'q';'u']
+let die11 = ['e';'e';'i';'n';'s';'u']
+let die10 = ['e';'e';'g';'h';'n';'w']
+let die4 = ['a';'f';'f';'k';'p';'s']
+let die16 = ['h';'l';'n';'n';'r';'z']
+let die7 = ['d';'e';'i';'l';'r';'x']
 let dieArray = [|die1;die2;die3;die4;die5;die6;die7;die8;
                  die9;die10;die11;die12;die13;die14;die15;die16|]
 
@@ -107,6 +107,9 @@ let bigDice =
   bigdicearray.(4).(4) <- bigDieArray.(24);
   bigdicearray
 
+let lookup = 
+  Hashtbl.create 16
+
 
 (** [random_letter list] takes in a char list [list] and returns a randomly 
     selected char from that char list
@@ -121,6 +124,9 @@ let random_letter str : char =
     | [] -> failwith "random letter chooser error" in 
   get_char str
 
+let test = 
+  [|[|'a';'b';'c';'d'|];[|'e';'f';'g';'h'|];[|'i';'j';'k';'l'|];[|'m';'n';'o';'p'|]|]
+
 let make_board m n: board = 
   let choose_die m =
     if m = 4 then dicearray
@@ -129,9 +135,12 @@ let make_board m n: board =
   let die = choose_die m in
   let arr = Array.make_matrix m n ' ' in
   let edit_arr arr = 
+    Hashtbl.clear lookup;
     for x=0 to m-1 do 
       for y=0 to n-1 do
-        arr.(x).(y) <- random_letter die.(x).(y)
+        let c =  test.(x).(y) in (*random_letter die.(x).(y)*)
+        arr.(x).(y) <- c;
+        Hashtbl.add lookup c (x,y);
       done
     done in 
 
@@ -234,6 +243,26 @@ let get_char n board =
   if n=14 then board.(3).(2) else
     board.(3).(3)
 
+let index_to_pos (f,s) = 
+  match (f,s) with
+  | (0,0) -> 0
+  | (0,1) -> 1
+  | (0,2) -> 2
+  | (0,3) -> 3
+  | (1,0) -> 4
+  | (1,1) -> 5
+  | (1,2) -> 6
+  | (1,3) -> 7
+  | (2,0) -> 8
+  | (2,1) -> 9
+  | (2,2) -> 10
+  | (2,3) -> 11
+  | (3,0) -> 12
+  | (3,1) -> 13
+  | (3,2) -> 14
+  | (3,3) -> 15
+  | _ -> failwith "index_to_pos error"
+
 
 
 let rec get_all_words board = 
@@ -244,56 +273,112 @@ let rec print_list list =
   | [] -> print_string "\n"
   | h::t -> print_int h; print_list t
 
-let rec dfs char n board str trie acc : string list=
-  visited_array.(n) <- true;
+let rec print_string_list (list:string list) = 
+  match list with
+  | [] -> print_string "\n"
+  | h::t -> print_string (h^",  "); print_string_list t
+
+
+let rec print_char_list (list:char list) = 
+  match list with
+  | [] -> print_string "\n"
+  | h::t -> print_string ((Char.escaped h)^",  "); print_char_list t
+
+let rec cons_list list1 list2 = 
+  match list1 with
+  | h::t -> if List.mem h list2 then 
+      cons_list t list2
+    else 
+      cons_list t (h::list2)
+  | [] -> list2
+
+let rec for_each f lst char n board str trie acc visited z = 
+  match lst with
+  | h::t ->  
+    for_each f t ' ' (-1) board str trie acc visited (f (get_char n board) h board str trie acc visited)
+  | [] -> z
+
+
+let rec dfs (char:char) n board str trie acc visited: string list=
+  (* visited_array.(n) <- true; *)
+  let visited = n::visited in
   let test_string = str^(Char.escaped (get_char n board)) in
   let new_acc test_string acc = 
-    if String.length test_string > 3 then 
-      if String.length test_string > 4 then (* Trie.search test_string trie *)
+    if  String.length test_string > 2 then (*Trie.search test_string trie *)
+      if not (List.mem test_string acc) then 
         test_string::acc
       else 
-        acc
-    else acc in 
+        acc 
+    else acc in  
   let ret_acc = new_acc test_string acc in 
   let adjacent = adjacency_array.(n) in 
-  print_list adjacent;
-  let rec rec_call lst= 
+  let rec rec_call lst ret= 
     match lst with
     | h::t ->
-      if visited_array.(h) = false 
-      then dfs (get_char h board) h board test_string trie ret_acc else
-        rec_call t
-    | [] -> acc in  
+      if not (List.mem h visited)
+      (* if visited_array.(h) = false  *)
+      then 
+        dfs (get_char h board) h board test_string trie ret_acc visited @ rec_call t ret_acc
+        (* print_string_list ("BLAH: "::blah);
+           print_string "RET_ACC: ";
+           print_string_list ret_acc;
+           print_string "CONS_LIST: "; *)
+        (* print_string_list (cons_list blah ret_acc);  *)
+        (* rec_call t (cons_list blah ret) *)
+      else 
+        rec_call t ret_acc
+    | [] -> ret_acc in   
 
-  rec_call adjacent
+  rec_call adjacent [] 
+
+let rec remove_dup visited adjacents acc= 
+  match adjacents with 
+  | h::t ->
+    if List.mem h visited then remove_dup visited t acc else
+      remove_dup visited t (h::acc)
+  | [] -> acc
 
 
+let rec check_word (string:string) board visited: bool = 
+  let l = String.get string 0  in 
+  if Hashtbl.mem lookup l = false then 
+    false
+  else
+    let index = Hashtbl.find_all lookup l in (* gives us list of positions *)
+    let pos = index_to_pos (List.hd index) in 
+    let visited = pos::visited in
+    let num_adjs = adjacency_array.(pos) in (* list of adjacent positions *)
+    let num_adjs = remove_dup visited num_adjs [] in 
+    let rec get_char_adjs lst acc= 
+      match lst with 
+      | h::t -> get_char_adjs t ((get_char h board)::acc)
+      | [] -> acc in 
+    let char_adjs = get_char_adjs num_adjs [] in (* list of adjacent characters *)
+    let rec search_adjs lst = 
+      match lst with 
+      | h::t -> 
+        if String.length string = 2 then 
+          if h = String.get string 1 then 
+            true
+          else
+            search_adjs t
+        else
+        if h = String.get string 1 then 
+          check_word (String.sub string 1 ((String.length string) - 1)) board visited
+        else
+          search_adjs t
+      | [] -> false
+    in 
+    search_adjs char_adjs
 
 
-
-
-
-
-
-(* 
-let rec get_all_words (board: board) (visited: (bool array) array) (i:int)
-    (j:int) (str:string) (acc: string list) : string list =  *)
-(* visited.(i).(j) <- true; 
-   let word = str^Char.escaped(board.(i).(j)) in
-   if isWord word then word::acc else 
-   for row = i-1 to i+1 do 
-   if row<=4 then 
-   for col = j-1 to j+1 do
-    if col<=4 then
-    get_words_util board visited row col str acc *)
 
 
 (** [valid_string word board] is [true] if [word] is a valid string
     from [board] and [false] otherwise.
 *)
 let rec valid_string word board = 
-  (* TODO *)
-  true
+  check_word word board []
 
 
 
