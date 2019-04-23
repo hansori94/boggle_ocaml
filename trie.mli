@@ -36,5 +36,5 @@ val valid_english : string -> t-> bool
 
 
 (* testing *)
-(** [words f] is a list of all words in a .txt file [f] *)
-(* val words : string -> string list *)
+(* * [words f] is a list of all words in a .txt file [f] *)
+val words : string -> string list
