@@ -2,8 +2,6 @@ open Trie
 
 type board = (char array) array
 
-let alphabet = ['a';'b';'c';'d';'e';'f';'g';'h';'i';'j';'k';'l';'m';'n';'o';
-                'p';'q';'r';'s';'t';'u';'v';'w';'x';'y';'z']
 
 (** 4x4 set of boggle dice *)
 let die1 = ['a';'a';'e';'e';'g';'n'] 
@@ -110,6 +108,9 @@ let bigDice =
 let lookup = 
   Hashtbl.create 16
 
+let lookupBig = 
+  Hashtbl.create 25
+
 
 (** [random_letter list] takes in a char list [list] and returns a randomly 
     selected char from that char list
@@ -132,15 +133,20 @@ let make_board m n: board =
     if m = 4 then dicearray
     else bigdicearray
   in
+  let choose_hash m =
+    if m=4 then lookup
+    else lookupBig 
+  in
+  let hash = choose_hash m in 
   let die = choose_die m in
   let arr = Array.make_matrix m n ' ' in
   let edit_arr arr = 
-    Hashtbl.clear lookup;
+    Hashtbl.clear hash;
     for x=0 to m-1 do 
       for y=0 to n-1 do
-        let c =  test.(x).(y) in (*random_letter die.(x).(y)*)
+        let c = random_letter die.(x).(y) in (*test.(x).(y)*)
         arr.(x).(y) <- c;
-        Hashtbl.add lookup c (x,y);
+        Hashtbl.add hash c (x,y);
       done
     done in 
 
@@ -222,46 +228,178 @@ let adjacency_array =
   arr.(15) <- [10;11;14];
   arr
 
-let visited_array =
-  Array.make 16 false
+let adjacency_array_big = 
+  let arr = Array.make 25 [] in 
+  arr.(0) <- [1;5;6];
+  arr.(1) <- [0;5;6;7;2];
+  arr.(2) <- [1;6;7;8;3];
+  arr.(3) <- [2;7;8;9;4];
+  arr.(4) <- [3;8;9];
+  arr.(5) <- [0;1;6;10;11];
+  arr.(6) <- [0;1;2;5;7;10;11;12];
+  arr.(7) <- [1;2;3;6;8;11;12;13];
+  arr.(8) <- [2;3;4;7;9;12;13;14];
+  arr.(9) <- [3;4;8;13;14];
+  arr.(10) <- [5;6;11;15;16];
+  arr.(11) <- [5;6;7;10;12;15;16;17];
+  arr.(12) <- [6;7;8;11;13;16;17;18];
+  arr.(13) <- [7;8;9;12;14;17;18;19];
+  arr.(14) <- [8;9;13;18;19];
+  arr.(15) <- [10;11;16;20;21];
+  arr.(16) <- [10;11;12;15;17;20;21;22];
+  arr.(17) <- [11;12;13;16;18;21;22;23];
+  arr.(18) <- [12;13;14;17;19;22;23;24];
+  arr.(19) <- [13;14;18;23;24];
+  arr.(20) <- [15;16;21];
+  arr.(21) <- [15;16;17;20;22];
+  arr.(22) <- [16;17;18;21;23];
+  arr.(23) <- [17;18;19;22;24];
+  arr.(24) <- [18;19;23];
+  arr
 
 let get_char n board =
+  if Array.length board = 4 then 
+    if n=0 then board.(0).(0) else
+    if n=1 then board.(0).(1) else
+    if n=2 then board.(0).(2) else
+    if n=3 then board.(0).(3) else
+    if n=4 then board.(1).(0) else
+    if n=5 then board.(1).(1) else
+    if n=6 then board.(1).(2) else
+    if n=7 then board.(1).(3) else
+    if n=8 then board.(2).(0) else
+    if n=9 then board.(2).(1) else
+    if n=10 then board.(2).(2) else
+    if n=11 then board.(2).(3) else
+    if n=12 then board.(3).(0) else
+    if n=13 then board.(3).(1) else
+    if n=14 then board.(3).(2) else
+      board.(3).(3)
+  else
   if n=0 then board.(0).(0) else
   if n=1 then board.(0).(1) else
   if n=2 then board.(0).(2) else
   if n=3 then board.(0).(3) else
-  if n=4 then board.(1).(0) else
-  if n=5 then board.(1).(1) else
-  if n=6 then board.(1).(2) else
-  if n=7 then board.(1).(3) else
-  if n=8 then board.(2).(0) else
-  if n=9 then board.(2).(1) else
-  if n=10 then board.(2).(2) else
-  if n=11 then board.(2).(3) else
-  if n=12 then board.(3).(0) else
-  if n=13 then board.(3).(1) else
-  if n=14 then board.(3).(2) else
-    board.(3).(3)
+  if n=4 then board.(0).(4) else
+  if n=5 then board.(1).(0) else
+  if n=6 then board.(1).(1) else
+  if n=7 then board.(1).(2) else
+  if n=8 then board.(1).(3) else
+  if n=9 then board.(1).(4) else
+  if n=10 then board.(2).(0) else
+  if n=11 then board.(2).(1) else
+  if n=12 then board.(2).(2) else
+  if n=13 then board.(2).(3) else
+  if n=14 then board.(2).(4) else
+  if n=15 then board.(3).(0) else
+  if n=16 then board.(3).(1) else
+  if n=17 then board.(3).(2) else
+  if n=18 then board.(3).(3) else
+  if n=19 then board.(3).(4) else
+  if n=20 then board.(4).(0) else
+  if n=21 then board.(4).(1) else
+  if n=22 then board.(4).(2) else
+  if n=23 then board.(4).(3) else
+    board.(4).(4)
 
-let index_to_pos (f,s) = 
-  match (f,s) with
-  | (0,0) -> 0
-  | (0,1) -> 1
-  | (0,2) -> 2
-  | (0,3) -> 3
-  | (1,0) -> 4
-  | (1,1) -> 5
-  | (1,2) -> 6
-  | (1,3) -> 7
-  | (2,0) -> 8
-  | (2,1) -> 9
-  | (2,2) -> 10
-  | (2,3) -> 11
-  | (3,0) -> 12
-  | (3,1) -> 13
-  | (3,2) -> 14
-  | (3,3) -> 15
-  | _ -> failwith "index_to_pos error"
+let index_to_pos m (f,s) = 
+  if m = 4 then 
+    match (f,s) with
+    | (0,0) -> 0
+    | (0,1) -> 1
+    | (0,2) -> 2
+    | (0,3) -> 3
+    | (1,0) -> 4
+    | (1,1) -> 5
+    | (1,2) -> 6
+    | (1,3) -> 7
+    | (2,0) -> 8
+    | (2,1) -> 9
+    | (2,2) -> 10
+    | (2,3) -> 11
+    | (3,0) -> 12
+    | (3,1) -> 13
+    | (3,2) -> 14
+    | (3,3) -> 15
+    | _ -> failwith "index_to_pos error4"
+  else
+    match (f,s) with
+    | (0,0) -> 0
+    | (0,1) -> 1
+    | (0,2) -> 2
+    | (0,3) -> 3
+    | (0,4) -> 4
+    | (1,0) -> 5
+    | (1,1) -> 6
+    | (1,2) -> 7
+    | (1,3) -> 8
+    | (1,4) -> 9
+    | (2,0) -> 10
+    | (2,1) -> 11
+    | (2,2) -> 12
+    | (2,3) -> 13
+    | (2,4) -> 14
+    | (3,0) -> 15
+    | (3,1) -> 16
+    | (3,2) -> 17
+    | (3,3) -> 18
+    | (3,4) -> 19
+    | (4,0) -> 20
+    | (4,1) -> 21
+    | (4,2) -> 22
+    | (4,3) -> 23
+    | (4,4) -> 24
+    | _ -> failwith "index_to_pos error5"
+
+let pos_to_index m n = 
+  if m = 4 then 
+    match n with
+    | 0 -> (0,0)
+    | 1 -> (0,1)
+    | 2 -> (0,2)
+    | 3 -> (0,3)
+    | 4 -> (1,0)
+    | 5 -> (1,1)
+    | 6 -> (1,2)
+    | 7 -> (1,3)
+    | 8 -> (2,0)
+    | 9 -> (2,1)
+    | 10 -> (2,2)
+    | 11 -> (2,3)
+    | 12 -> (3,0)
+    | 13 -> (3,1)
+    | 14 -> (3,2)
+    | 15 -> (3,3)
+    | _ -> failwith "pos_to_index error4"
+  else
+    match n with
+    | 0 -> (0,0)
+    | 1 -> (0,1)
+    | 2 -> (0,2)
+    | 3 -> (0,3)
+    | 4 -> (0,4)
+    | 5 -> (1,0)
+    | 6 -> (1,1)
+    | 7 -> (1,2)
+    | 8 -> (1,3)
+    | 9 -> (1,4)
+    | 10 -> (2,0)
+    | 11 -> (2,1)
+    | 12 -> (2,2)
+    | 13 -> (2,3)
+    | 14 -> (2,4)
+    | 15 -> (3,0)
+    | 16 -> (3,1)
+    | 17 -> (3,2)
+    | 18 -> (3,3)
+    | 19 -> (3,4)
+    | 20 -> (4,0)
+    | 21 -> (4,1)
+    | 22 -> (4,2)
+    | 23 -> (4,3)
+    | 24 -> (4,4)
+    | _ -> failwith "pos_to_index error5"
+
 
 
 
@@ -292,44 +430,6 @@ let rec cons_list list1 list2 =
       cons_list t (h::list2)
   | [] -> list2
 
-let rec for_each f lst char n board str trie acc visited z = 
-  match lst with
-  | h::t ->  
-    for_each f t ' ' (-1) board str trie acc visited (f (get_char n board) h board str trie acc visited)
-  | [] -> z
-
-
-let rec dfs (char:char) n board str trie acc visited: string list=
-  (* visited_array.(n) <- true; *)
-  let visited = n::visited in
-  let test_string = str^(Char.escaped (get_char n board)) in
-  let new_acc test_string acc = 
-    if  String.length test_string > 2 then (*Trie.search test_string trie *)
-      if not (List.mem test_string acc) then 
-        test_string::acc
-      else 
-        acc 
-    else acc in  
-  let ret_acc = new_acc test_string acc in 
-  let adjacent = adjacency_array.(n) in 
-  let rec rec_call lst ret= 
-    match lst with
-    | h::t ->
-      if not (List.mem h visited)
-      (* if visited_array.(h) = false  *)
-      then 
-        dfs (get_char h board) h board test_string trie ret_acc visited @ rec_call t ret_acc
-        (* print_string_list ("BLAH: "::blah);
-           print_string "RET_ACC: ";
-           print_string_list ret_acc;
-           print_string "CONS_LIST: "; *)
-        (* print_string_list (cons_list blah ret_acc);  *)
-        (* rec_call t (cons_list blah ret) *)
-      else 
-        rec_call t ret_acc
-    | [] -> ret_acc in   
-
-  rec_call adjacent [] 
 
 let rec remove_dup visited adjacents acc= 
   match adjacents with 
@@ -340,37 +440,57 @@ let rec remove_dup visited adjacents acc=
 
 
 let rec check_word (string:string) board visited: bool = 
+  let choose_hash m =
+    if m=4 then lookup
+    else lookupBig 
+  in
+  let hash = choose_hash (Array.length board) in 
   let l = String.get string 0  in 
-  if Hashtbl.mem lookup l = false then 
+  if Hashtbl.mem hash l = false then 
     false
   else
-    let index = Hashtbl.find_all lookup l in (* gives us list of positions *)
-    let pos = index_to_pos (List.hd index) in 
-    let visited = pos::visited in
-    let num_adjs = adjacency_array.(pos) in (* list of adjacent positions *)
-    let num_adjs = remove_dup visited num_adjs [] in 
-    let rec get_char_adjs lst acc= 
-      match lst with 
-      | h::t -> get_char_adjs t ((get_char h board)::acc)
+    let index = Hashtbl.find_all hash l in (* gives us list of positions *)
+    let rec visited_indices visited acc= 
+      match visited with
+      | h::t -> visited_indices t ((pos_to_index (Array.length board) h)::acc)
       | [] -> acc in 
-    let char_adjs = get_char_adjs num_adjs [] in (* list of adjacent characters *)
-    let rec search_adjs lst = 
-      match lst with 
-      | h::t -> 
-        if String.length string = 2 then 
+    let index = remove_dup (visited_indices visited []) index [] in 
+
+    let helper h = 
+      let pos = index_to_pos (Array.length board) h in 
+      let visited = pos::visited in
+      let choose_adjArray board =
+        if Array.length board = 4 then adjacency_array else adjacency_array_big in 
+      let adj_array = choose_adjArray board in 
+      let num_adjs = adj_array.(pos) in (* list of adjacent positions *)
+      let num_adjs = remove_dup visited num_adjs [] in 
+      let rec get_char_adjs lst acc= 
+        match lst with 
+        | h::t -> get_char_adjs t ((get_char h board)::acc)
+        | [] -> acc in 
+      let char_adjs = get_char_adjs num_adjs [] in (* list of adjacent characters *)
+      let rec search_adjs lst = 
+        match lst with 
+        | h::t -> 
+          if String.length string = 2 then 
+            if h = String.get string 1 then 
+              true
+            else
+              search_adjs t
+          else
           if h = String.get string 1 then 
-            true
+            check_word (String.sub string 1 ((String.length string) - 1)) board visited
           else
             search_adjs t
-        else
-        if h = String.get string 1 then 
-          check_word (String.sub string 1 ((String.length string) - 1)) board visited
-        else
-          search_adjs t
-      | [] -> false
-    in 
-    search_adjs char_adjs
+        | [] -> false
+      in 
+      search_adjs char_adjs in 
 
+    let rec pos lst b= 
+      match lst with
+      | [] -> false
+      | h::t -> helper h || pos t b in
+    pos index false
 
 
 
@@ -379,7 +499,3 @@ let rec check_word (string:string) board visited: bool =
 *)
 let rec valid_string word board = 
   check_word word board []
-
-
-
-

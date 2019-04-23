@@ -166,73 +166,7 @@ let search key trie: bool =
 
   search_help key trie 0
 
-(* let rec search_list keylst trie acc=
-   match keylst with
-   | h::t -> search_list t trie (search h trie)
-   | [] -> acc *)
 
-
-
-
-
-
-
-
-
-
-
-(* * [insert_word t lst] is a trie [t] with the word represented by [lst] 
-   inserted. 
-   Requires: 
-   [lst] is a character list of the word ( "ace" -> ['a';'c';'e'] 
-*)
-
-
-(* let rec insert_word trie lst root = 
-   let children_list = get_children root in (* children tries of current root *)
-   let keys_list = get_keys children_list [] in (* keys of the children *)
-   match lst with (* matching each character of the word *)
-   | h::t -> 
-    (* if a given character is not a node in a trie yet *)
-    if (List.mem h (keys_list)) 
-    then 
-      insert_word trie t (find_subtrie children_list h)
-    else
-      let new_trie = Node (h, [], false) in
-      (* let updated_subtree = update_children root (new_trie::children_list) in *)
-      (* creating a new list of children with a new trie 
-         with value [h] appended *)
-      let updated_trie = update_children trie (new_trie::children_list) in
-      (* recursively calling the function with the new children, 
-         with [root] set to the next subtrie *)
-      insert_word updated_trie t (find_subtrie children_list h)
-   | [] -> trie  *)
-
-(* | h::[] -> 
-   if (List.mem h (keys_list)) 
-   then 
-   let update_list = update_children (trie (make_true (find_subtrie children_list h)))
-
-   insert_word trie [] (find_subtrie children_list h)
-   else
-   let new_trie = Node (h, [], true) in
-   let updated_list = update_children trie (new_trie::children_list) in
-   insert_word updated_list [] (find_subtrie children_list h) *)
-(* | [] -> trie  *)
-(* with last node changed to true *)
-
-(* (** [find_subtrie lst c] is a trie [t] with a key value [c] from the list of
-    tries [lst] *)
-   let rec find_subtrie lst c = 
-   match lst with
-   | h::t -> begin 
-      match h with
-      | Node (k, _, _) -> 
-        if k = c then h else find_subtrie t c
-    end
-   | [] -> failwith "c is not in lst" *)
-
-(* let trie = insert (words "dictionary.txt") empty *)
 
 (** [valid_english word] is [true] if [word] is a valid English word
     i.e. included in the text file "dictionary.txt" provided in the directory *)
