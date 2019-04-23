@@ -47,8 +47,8 @@ let rec get_keys lst acc : key list =
   | [] -> acc
 
 
-(** [contains_key key nodelist] returns a boolean value indicating whether or not 
-    a key [key] is the key of a node present in [nodelist] 
+(** [contains_key key nodelist] returns a boolean value indicating whether 
+    or not a key [key] is the key of a node present in [nodelist]. 
 *)
 let rec contains_key key nodelist = 
   match nodelist with
@@ -56,9 +56,9 @@ let rec contains_key key nodelist =
     if key = c then true else contains_key key t
   | [] -> false
 
-(** [get_key_node key nodelist] returns the node that has key [key] in the 
-    nodelist
-    Requires: Node possessing [key] is present in [nodelist]
+(** [get_key_node key nodelist] returns the node that has key [key] 
+    in the nodelist.
+    Requires: Node possessing [key] is present in [nodelist].
 *)
 let rec get_key_node key nodelist = 
   match nodelist with
@@ -74,7 +74,8 @@ let rec get_key_node key nodelist =
 let rec remove_key nodelist key acc=
   match nodelist with
   | Node(c, l, b)::t ->
-    if key = c then remove_key t key acc  else remove_key t key (Node(c,l,b)::acc)
+    if key = c then remove_key t key acc  
+    else remove_key t key (Node(c,l,b)::acc)
   | [] -> acc
 
 
@@ -124,13 +125,17 @@ let update_children t lst =
 let rec insert_word key trie n full_length: t = 
   match trie with
   | Node(c, list, b) -> 
-    (* print_int n; print_string ("\nYet to be Inserted: "^key); print_string ("\nKey of current Node: "^c^"\nChildren: "); print_list list; print_endline "     "; *)
-    if n = full_length then (* when you're on the last letter of the word being inputted *)
+    (* when you're on the last letter of the word being inputted *)
+    if n = full_length then 
       Node(c, list, true)
     else
-    if contains_key (Char.escaped key.[0]) list then (* if the key is already a child of the given node *)
+      (* if the key is already a child of the given node *)
+    if contains_key (Char.escaped key.[0]) list then
       let curr = get_key_node (Char.escaped key.[0]) list in 
-      update_children trie ((insert_word (String.sub key 1 (full_length - (n+1))) curr (n+1) full_length)::(remove_key list (Char.escaped key.[0]) []))
+      update_children trie ((insert_word 
+                               (String.sub key 1 (full_length - (n+1)))
+                               curr (n+1) full_length)::
+                            (remove_key list (Char.escaped key.[0]) []))
     else 
       let new_node = (insert_char (Char.escaped key.[0]) trie) in 
       insert_word key new_node n full_length
@@ -158,17 +163,14 @@ let search key trie: bool =
       if n = full_length then 
         if b = true then true else false
       else
-      if contains_key (Char.escaped key.[0]) list then
+      if contains_key (Char.escaped key.[0]) list 
+      then
         let curr = get_key_node (Char.escaped key.[0]) list in 
-        search_help (String.sub key 1 (full_length - (n+1))) curr (n+1) else false
-
+        search_help (String.sub key 1 (full_length - (n+1))) curr (n+1)
+      else false
   in 
-
   search_help key trie 0
 
 
-
-(** [valid_english word] is [true] if [word] is a valid English word
-    i.e. included in the text file "dictionary.txt" provided in the directory *)
 let valid_english word trie = 
   search word trie

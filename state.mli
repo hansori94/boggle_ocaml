@@ -12,13 +12,17 @@ exception Duplicate
 (** Raised if word less than three characters is encountered. *)
 exception TooShort
 
+(** Raised if word is not makeable from the current board. *)
 exception NotBoard
+
+(** Raised if word is not a valid English word. *)
 exception NotEnglish
 
 (** [init_player] returns a new player with default starting values *)
 val init_player : player
 
-(** [get_words_found player] returns all the words a player has correctly found *)
+(** [get_words_found player] returns all the words
+    a player has correctly found *)
 val get_words_found : player -> string list
 
 (** [get_points player] returns the point score of the player *)
@@ -29,7 +33,6 @@ val print_score : player -> unit
 
 (** [print_words player] prints the list of words that the player has found. *)
 val print_words : player -> unit
-
 
 (** [update_state player word point] returns a new player state with an updated
     list of found words containing [word] and updated points with the addition 

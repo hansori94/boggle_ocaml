@@ -18,7 +18,8 @@ let timer_helper x =
 let timeout _ = 
   raise TimeOut
 
-(** [print_time status] prints the time remaining in the game at time [status] *)
+(** [print_time status] prints the time remaining in the game 
+    at time [status] *)
 let print_time (status: Unix.interval_timer_status) = 
   let timeleft = int_of_float status.it_value in 
   ANSITerminal.(print_string [red] ("Time Remaining: \
@@ -28,7 +29,8 @@ let print_time (status: Unix.interval_timer_status) =
 let rec start_game input state trie = 
   match Parse.parse input with
   | Quit -> 
-    ANSITerminal.(print_string [magenta;Bold] "Quitting the game... Goodbye!\n");
+    ANSITerminal.(print_string
+                    [magenta;Bold] "Quitting the game... Goodbye!\n");
     ()
   | Start(size) -> 
     let create_board size = 
@@ -45,7 +47,8 @@ let rec start_game input state trie =
       it_value = 121.;
     } in
 
-    (** [play_game board state] plays the game with [board] and updates [state] *)
+    (** [play_game board state] plays the game 
+        with [board] and updates [state] *)
     let rec play_game board state trie = 
       try
         Sys.set_signal (-2) (Signal_handle timeout);
@@ -61,29 +64,33 @@ let rec start_game input state trie =
         | Word(word) -> begin
             let w = List.hd word in
             try (play_game board (State.update_state (state) 
-                                    (State.check_valid_word state w board trie)) trie)
+                                    (State.check_valid_word state w board trie)) 
+                   trie)
             with
             | TooShort ->
-              ANSITerminal.(print_string [magenta; Bold] "Your word is too short. \
-                                                          It must have at least \
-                                                          3 letters...\
-                                                          Try a longer word!\n\n");
+              ANSITerminal.(print_string 
+                              [magenta; Bold] "Your word is too short. \
+                                               It must have at least \
+                                               3 letters...\
+                                               Try a longer word!\n\n");
               play_game board state trie
             | Duplicate -> 
-              ANSITerminal.(print_string [magenta; Bold] "You already found this \
-                                                          word. \
-                                                          Try another word!\n\n");
+              ANSITerminal.(print_string 
+                              [magenta; Bold] "You already found this word. \
+                                               Try another word!\n\n");
               play_game board state trie
 
             | NotBoard -> 
-              ANSITerminal.(print_string [magenta; Bold] "You can't form that word \
-                                                          with the current board. \
-                                                          Try another word!\n\n");
+              ANSITerminal.(print_string 
+                              [magenta; Bold] "You can't form that word \
+                                               with the current board. \
+                                               Try another word!\n\n");
               play_game board state trie
             | NotEnglish -> 
-              ANSITerminal.(print_string [magenta; Bold] "This is not a valid \
-                                                          English word. \
-                                                          Try another word!\n\n");
+              ANSITerminal.(print_string 
+                              [magenta; Bold] "This is not a valid \
+                                               English word. \
+                                               Try another word!\n\n");
               play_game board state trie
           end
 
@@ -99,26 +106,31 @@ let rec start_game input state trie =
           let rec help input = 
             match String.lowercase_ascii input with 
             | "small" -> 
-              ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
+              ANSITerminal.(print_string 
+                              [magenta; Bold] "Starting a new game...\n");
               start_game "start boggle" state trie
             | "big" -> 
-              ANSITerminal.(print_string [magenta; Bold] "Starting a new game...\n");
+              ANSITerminal.(print_string 
+                              [magenta; Bold] "Starting a new game...\n");
               start_game "start big boggle" state trie
             | "no" -> ANSITerminal.(print_string [magenta; Bold] "Goodbye! \n");
-            | _ -> ANSITerminal.(print_string [magenta] "Wrong input. Please type \
-                                                         (big/small/no): \n> ");
+            | _ -> ANSITerminal.(print_string 
+                                   [magenta] "Wrong input. Please type \
+                                              (big/small/no): \n> ");
               help (read_line ())
           in 
 
           help input
-        | Shake -> ANSITerminal.(print_string [blue; Bold] "Commencing shake!\n\n"); 
+        | Shake -> ANSITerminal.(print_string 
+                                   [blue; Bold] "Commencing shake!\n\n"); 
           if Array.length board = 4 then
             start_game "start boggle" State.init_player trie
           else
             start_game "start big boggle" State.init_player trie
 
         | exception Empty ->
-          ANSITerminal.(print_string [magenta;Bold] "You didn't type anything.\n\n"); 
+          ANSITerminal.(print_string 
+                          [magenta;Bold] "You didn't type anything.\n\n"); 
           play_game board state trie
         | exception Malformed -> 
           ANSITerminal.(print_string [magenta;Bold] "Bad input.\n\n");
@@ -131,9 +143,10 @@ let rec start_game input state trie =
         ANSITerminal.(print_string [red; Bold] "Time's Up!\n\n");
         ANSITerminal.(print_string [red] "Final ");
         State.print_score state;
-        ANSITerminal.(print_string [magenta; Bold] "\nType 'start boggle' or \
-                                                    'start big boggle' to start \
-                                                    a new game!\n");
+        ANSITerminal.(print_string 
+                        [magenta; Bold] "\nType 'start boggle' or \
+                                         'start big boggle' to start \
+                                         a new game!\n");
         print_string "> ";
         start_game (read_line ()) State.init_player trie
     in 
@@ -153,9 +166,10 @@ let rec start_game input state trie =
     print_string "> ";
     start_game (read_line()) state trie
   | _ -> 
-    ANSITerminal.(print_string [magenta] "Wrong input. Type \
-                                          'start boggle' or 'start big boggle' \
-                                          to start playing!\n");
+    ANSITerminal.(print_string 
+                    [magenta] "Wrong input. Type \
+                               'start boggle' or 'start big boggle' \
+                               to start playing!\n");
     print_string "> ";
     start_game (read_line()) state trie
 
@@ -178,11 +192,13 @@ let main () =
                    3. A specifc character may only be used once in a single word.\n\
                    4. Case doesn't matter!\n\
                    Have fun!");
-  ANSITerminal.(print_string [blue;Bold] "\n...and type 'shake it' while playing \
-                                          to reset the game with a new board!\n");       
-  ANSITerminal.(print_string [magenta] "\nType 'start boggle' or 'start big boggle' \
-                                        to start playing, \n\
-                                        or type 'quit game' to exit!\n");
+  ANSITerminal.(print_string 
+                  [blue;Bold] "\n...and type 'shake it' while playing \
+                               to reset the game with a new board!\n");       
+  ANSITerminal.(print_string 
+                  [magenta] "\nType 'start boggle' or 'start big boggle' \
+                             to start playing, \n\
+                             or type 'quit game' to exit!\n");
   print_string "> ";
   let trie = insert (words "dictionary.txt") empty in
   match read_line () with

@@ -6,6 +6,7 @@ exception TooShort
 
 exception NotBoard
 exception NotEnglish
+
 type player = {
   init_time: float;
   found_words: string list;
@@ -19,24 +20,31 @@ let init_player =
     points = 0;
   }
 
+(** [get_time player] is the elasped playing time of [player] *)
 let get_time player =
   Unix.gettimeofday () -. player.init_time
 
-
+(** [get_points player] is the list of found words of the [player]. *)
 let get_words_found player = 
   player.found_words
 
+(** [get_points player] is the current points of the [player]. *)
 let get_points player = 
   player.points
 
+(** [print_score player] prints the current score in [player] to the screen. *)
 let print_score (player : player) : unit = 
-  ANSITerminal.(print_string [red] ("Score: "^(string_of_int(get_points player))^"\n"))
+  ANSITerminal.(print_string [red] 
+                  ("Score: "^(string_of_int(get_points player))^"\n"))
 
+
+(** [print_list lst] prints the strings in [lst], separated by [, ]*)
 let rec print_list lst = 
   match lst with 
   | [] -> print_string "\n"
   | h::[] -> ANSITerminal.(print_string [red] ((h)^" ")); print_string "\n"
   | h::t -> ANSITerminal.(print_string [red] ((h)^", ")); print_list t
+
 
 let print_words player = 
   let words = player.found_words in 

@@ -89,8 +89,8 @@ let trie_tests = [
   "search for a word in an empty trie" >::
   (fun _ -> assert_equal false (search "hello" empty));
   "insert multiple words" >::
-  (fun _ -> assert_equal true (search "hell" 
-                                 (insert ["hello";"hell";"help";"also"] empty)));
+  (fun _ -> assert_equal true
+      (search "hell" (insert ["hello";"hell";"help";"also"] empty)));
   "insert already inserted word" >::
   (fun _ -> assert_equal (insert ["hello"] empty) 
       (insert ["hello"] (insert ["hello"] empty)));

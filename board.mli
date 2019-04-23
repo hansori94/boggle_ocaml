@@ -18,5 +18,8 @@ val make_board : int -> int -> board
     consisting of 4 rows and 4 columns with spaces between each char *)
 val print_board : board -> unit
 
-(** TODO DOCUMENT *)
+(** [valid_string word board] is [true] if [word] is a valid string
+    from [board] and [false] otherwise.  Valid is defined as makeable from the
+    board's sequence of adjacent letters without repeating the same tile.
+*)
 val valid_string : string -> board -> bool

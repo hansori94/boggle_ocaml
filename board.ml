@@ -129,8 +129,7 @@ let random_letter str : char =
     | [] -> failwith "random letter chooser error" in 
   get_char str
 
-(* let test = 
-   [|[|'a';'b';'c';'d'|];[|'e';'f';'g';'h'|];[|'i';'j';'k';'l'|];[|'m';'n';'o';'p'|]|] *)
+
 
 let make_board m n: board = 
   let choose_die m =
@@ -445,7 +444,8 @@ let rec valid_string word board =
 
       let rec visited_indices visited acc= 
         match visited with
-        | h::t -> visited_indices t ((pos_to_index (Array.length board) h)::acc)
+        | h::t -> visited_indices t 
+                    ((pos_to_index (Array.length board) h)::acc)
         | [] -> acc in 
       let index = remove_dup (visited_indices visited []) index [] in 
 
@@ -453,13 +453,16 @@ let rec valid_string word board =
         let pos = index_to_pos (Array.length board) h in 
         let visited = pos::visited in
         let choose_adjArray board =
-          if Array.length board = 4 then adjacency_array else adjacency_array_big in 
+          if Array.length board = 4 
+          then adjacency_array 
+          else adjacency_array_big in 
         let adj_array = choose_adjArray board in 
         let num_adjs = adj_array.(pos) in (* list of adjacent positions *)
         let num_adjs = remove_dup visited num_adjs [] in 
         let rec get_adj_indices poslst acc=
           match poslst with
-          | h::t -> get_adj_indices t ((pos_to_index (Array.length board) h)::acc)
+          | h::t -> 
+            get_adj_indices t ((pos_to_index (Array.length board) h)::acc)
           | [] -> acc
         in
 
