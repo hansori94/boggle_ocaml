@@ -422,6 +422,11 @@ let rec print_char_list (list:char list) =
   | [] -> print_string "\n"
   | h::t -> print_string ((Char.escaped h)^",  "); print_char_list t
 
+let rec print_tup_list list = 
+  match list with
+  | [] -> print_string "\n"
+  | (f,s)::t -> print_string "("; print_int f; print_string ", "; print_int s; print_string ")  "; print_tup_list t
+
 let rec cons_list list1 list2 = 
   match list1 with
   | h::t -> if List.mem h list2 then 
@@ -439,63 +444,80 @@ let rec remove_dup visited adjacents acc=
   | [] -> acc
 
 
-let rec check_word (string:string) board visited: bool = 
+
+
+
+
+(** [valid_string word board] is [true] if [word] is a valid string
+    from [board] and [false] otherwise.  Valid is defined as makeable from the
+    board's sequence of adjacent letters without repeating the same tile
+*)
+let rec valid_string word board = 
   let choose_hash m =
     if m=4 then lookup
     else lookupBig 
   in
   let hash = choose_hash (Array.length board) in 
-  let l = String.get string 0  in 
+  let l = String.get word 0  in 
   if Hashtbl.mem hash l = false then 
     false
-  else
+  else 
     let index = Hashtbl.find_all hash l in (* gives us list of positions *)
-    let rec visited_indices visited acc= 
-      match visited with
-      | h::t -> visited_indices t ((pos_to_index (Array.length board) h)::acc)
-      | [] -> acc in 
-    let index = remove_dup (visited_indices visited []) index [] in 
+    let rec check_word (string:string) board visited hash index: bool = 
 
-    let helper h = 
-      let pos = index_to_pos (Array.length board) h in 
-      let visited = pos::visited in
-      let choose_adjArray board =
-        if Array.length board = 4 then adjacency_array else adjacency_array_big in 
-      let adj_array = choose_adjArray board in 
-      let num_adjs = adj_array.(pos) in (* list of adjacent positions *)
-      let num_adjs = remove_dup visited num_adjs [] in 
-      let rec get_char_adjs lst acc= 
-        match lst with 
-        | h::t -> get_char_adjs t ((get_char h board)::acc)
+      let rec visited_indices visited acc= 
+        match visited with
+        | h::t -> visited_indices t ((pos_to_index (Array.length board) h)::acc)
         | [] -> acc in 
-      let char_adjs = get_char_adjs num_adjs [] in (* list of adjacent characters *)
-      let rec search_adjs lst = 
-        match lst with 
-        | h::t -> 
-          if String.length string = 2 then 
-            if h = String.get string 1 then 
-              true
+      let index = remove_dup (visited_indices visited []) index [] in 
+      print_tup_list index;
+      let helper h = 
+        let pos = index_to_pos (Array.length board) h in 
+        let visited = pos::visited in
+        let choose_adjArray board =
+          if Array.length board = 4 then adjacency_array else adjacency_array_big in 
+        let adj_array = choose_adjArray board in 
+        let num_adjs = adj_array.(pos) in (* list of adjacent positions *)
+        let num_adjs = remove_dup visited num_adjs [] in 
+        let rec get_adj_indices poslst acc=
+          match poslst with
+          | h::t -> get_adj_indices t ((pos_to_index (Array.length board) h)::acc)
+          | [] -> acc
+        in
+
+        let rec build_possibilities lst acc= 
+          match lst with 
+          | h::t -> 
+            if get_char h board = String.get string 1 then 
+              build_possibilities t (h::acc) else
+              build_possibilities t acc
+          | [] -> acc
+        in
+        let possible_paths = build_possibilities num_adjs [] in 
+
+        let rec search_adjs (lst:int list) = 
+          match lst with 
+          | h::t -> 
+            if String.length string = 2 then 
+              if get_char h board = String.get string 1 then 
+                true
+              else
+                search_adjs t
+            else
+            if get_char h board = String.get string 1 then 
+              check_word (String.sub string 1 ((String.length string) - 1)) 
+                board visited hash (get_adj_indices possible_paths [])
             else
               search_adjs t
-          else
-          if h = String.get string 1 then 
-            check_word (String.sub string 1 ((String.length string) - 1)) board visited
-          else
-            search_adjs t
+          | [] -> false
+        in 
+
+        search_adjs possible_paths in 
+
+      let rec pos lst b= 
+        match lst with
         | [] -> false
-      in 
-      search_adjs char_adjs in 
-
-    let rec pos lst b= 
-      match lst with
-      | [] -> false
-      | h::t -> helper h || pos t b in
-    pos index false
-
-
-
-(** [valid_string word board] is [true] if [word] is a valid string
-    from [board] and [false] otherwise.
-*)
-let rec valid_string word board = 
-  check_word word board []
+        | h::t -> helper h || pos t b in
+      pos index false
+    in
+    check_word word board [] hash index
