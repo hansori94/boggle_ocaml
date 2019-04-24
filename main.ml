@@ -49,10 +49,15 @@ let rec start_game input state trie =
     let board = create_board size in
     (* let state = State.init_player in *)
     let timer = Unix.ITIMER_REAL in 
-    let (timer_starter: Unix.interval_timer_status) = {
-      it_interval = 121.;
-      it_value = 121.;
-    } in
+    let (timer_starter: Unix.interval_timer_status) = 
+      if size = 
+         ["small"] then {
+        it_interval = 121.;
+        it_value = 121.;
+      } else {
+        it_interval = 241.;
+        it_value = 241.;
+      } in
 
     (** [play_game board state] plays the game 
         with [board] and updates [state] *)
