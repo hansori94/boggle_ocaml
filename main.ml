@@ -14,6 +14,9 @@ let timer_helper x =
 
 (** [timeout] catches the SIGALRM raised by the timer and returns 
     exception TimeOut
+    Requires: nothing!
+    Raises: exception [TimeOut]
+    Example: [timeout _] raises exception [TimeOut].
 *)
 let timeout _ = 
   raise TimeOut
@@ -25,7 +28,11 @@ let print_time (status: Unix.interval_timer_status) =
   ANSITerminal.(print_string [red] ("Time Remaining: \
                                     "^(string_of_int timeleft)^" seconds\n"))
 
-(** [start_game input] plays the game *)
+(** [start_game input] creates a new game state and begins reading player
+    input.
+    Requires: trie is a valid trie implementation, [state] is of type
+    Player.state
+    Returns: unit *)
 let rec start_game input state trie = 
   match Parse.parse input with
   | Quit -> 
@@ -102,7 +109,9 @@ let rec start_game input state trie =
           let input = read_line () in
 
           (** [help input] starts a new board or quits the game based on user 
-              input (y,n) *)
+              input (small, big,no) 
+              Requires: [input] is one of three strings, "big", "small", "no"
+              Returns: unit *)
           let rec help input = 
             match String.lowercase_ascii input with 
             | "small" -> 
@@ -177,7 +186,7 @@ let rec start_game input state trie =
 
 
 
-
+(**[main] plays the game! *)
 let main () = 
   ANSITerminal.(print_string [magenta; Bold] "\nWelcome to Boggle!\n");
   let board = Board.make_board 4 4 in

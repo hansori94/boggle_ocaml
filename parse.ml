@@ -11,13 +11,20 @@ exception Empty
 
 exception Malformed
 
-(** [parse_helper strlst] returns [strlst] but with the empty strings removed *)
+(** [parse_helper strlst] returns [strlst] but with the empty strings removed
+    Requires: strlst is a valid string list
+    Returns: strlst with empty strings removed
+    Example: parse_helper ["hello"; ""] is ["hello"]*)
 let rec parse_helper = function
   | [] -> []
   | h::t -> 
     if h = "" then parse_helper t else
       h::(parse_helper t)
 
+(**[parse str] parses the player's input
+   Requires: str is a valid string referring to the player's input.
+   Returns: an object of variant input
+   Example: [parse "quit game"] returns [Quit] *)
 let parse str = 
   let str = String.lowercase_ascii str in 
   let strings = String.split_on_char ' ' str in 

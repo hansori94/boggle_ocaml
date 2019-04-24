@@ -116,8 +116,12 @@ let lookupBig =
   Hashtbl.create 25
 
 
-(** [random_letter list] takes in a char list [list] and returns a randomly 
-    selected char from that char list
+(** [random_letter str] takes in a char list [str] and returns a randomly 
+    selected char from that char list.
+    Requires: str is a valid char list.
+    Returns: random letter from [str].
+    Example: [random_letter ['a';'n'] is 'n']
+
 *)
 let random_letter str : char = 
   Random.self_init ();
@@ -130,7 +134,10 @@ let random_letter str : char =
   get_char str
 
 
-
+(**[make_board m n] creates an object of type board with dimensions m X n.
+   Requires: m and n are ints..
+   Returns: [board] with dimensions m X n. 
+*)
 let make_board m n: board = 
   let choose_die m =
     if m = 4 then dicearray
@@ -158,7 +165,10 @@ let make_board m n: board =
   arr
 
 
-
+(**[print_board] prints [board] to the console
+   in a 4x4 or 5x5 grid.
+   Requires: [board] is a valid char array
+   Returns: unit after printing. *)
 let print_board (board:board) : unit=
   let board_format = 
     if Array.length board = 4 then 
@@ -319,6 +329,8 @@ let get_char n board =
     Requires:
     -if m = 4 then index must be between (0,0)-(3,3)
     -if m = 5 then index must be between (0,0)-(4,4)
+    Returns: int position of board coordinate
+    Example: [index_to_pos 4 (1,2) is 6]
 *)
 let index_to_pos m (f,s) = 
   if m = 4 then 
@@ -375,6 +387,8 @@ let index_to_pos m (f,s) =
     Requires:
     -if m = 4 then position must be between 0-15
     -if m = 5 then position must be between 0-24
+    Returns: coordinate relating to int position on board.
+    Example: [pos_to_index 4 4] is (1,0)
 *)
 let pos_to_index m n = 
   if m = 4 then 
@@ -426,8 +440,11 @@ let pos_to_index m n =
     | _ -> failwith "pos_to_index error5"
 
 
-(** [remove_dup v a] removes the elements in list [a] that are present in 
-    list [v]
+(** [remove_dup v a] removes the elements in list [adjacents] that are present in 
+    list [visited].
+    Requires: [visited] and [adjacents] and [acc] are lists.
+    Returns: [adjactents] with similar elements of [visited] removed.
+    Example: [remove_dup [1;2] [2;3;4;5]] is [3;4;5]]
 *)
 let rec remove_dup visited adjacents acc= 
   match adjacents with 
@@ -436,14 +453,14 @@ let rec remove_dup visited adjacents acc=
       remove_dup visited t (h::acc)
   | [] -> acc
 
-
-
-
-
-
 (** [valid_string word board] is [true] if [word] is a valid string
     from [board] and [false] otherwise.  Valid is defined as makeable from the
     board's sequence of adjacent letters without repeating the same tile
+
+    Requires: [word] is a string and [board] is valid object of type [board].
+    Returns: true if the string is valid and false otherwise.
+    Example: if the word "hello" can be formed following the rules of Boggle
+    on [board], then [valid_string "hello" board] is true.
 *)
 let rec valid_string word board = 
   let choose_hash m =
