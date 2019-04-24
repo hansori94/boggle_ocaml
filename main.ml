@@ -55,8 +55,8 @@ let rec start_game input state trie =
         it_interval = 121.;
         it_value = 121.;
       } else {
-        it_interval = 241.;
-        it_value = 241.;
+        it_interval = 181.;
+        it_value = 181.;
       } in
 
     (** [play_game board state] plays the game 
